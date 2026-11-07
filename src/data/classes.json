@@ -1,0 +1,191 @@
+[
+ {
+  "name": "Functor",
+  "prio": "core",
+  "purpose": "Things you can map a function over without changing their shape. Laws: `fmap id == id`, `fmap (f . g) == fmap f . fmap g`.",
+  "kind": "`Functor :: (* -> *) -> Constraint`",
+  "sup": "none",
+  "methods": "`fmap`, `(<$)`",
+  "minimal": "`fmap`"
+ },
+ {
+  "name": "Applicative",
+  "prio": "core",
+  "purpose": "Apply functions that are themselves inside a context; combine independent effects.",
+  "kind": "`Applicative :: (* -> *) -> Constraint`",
+  "sup": "`Functor`",
+  "methods": "`pure`, `(<*>)`, `liftA2`, `(*>)`, `(<*)`",
+  "minimal": "`pure, ((<*>) | liftA2)`"
+ },
+ {
+  "name": "Monad",
+  "prio": "core",
+  "purpose": "Sequence effects where the next step depends on the previous result. `do` notation turns into `>>=`.",
+  "kind": "`Monad :: (* -> *) -> Constraint`",
+  "sup": "`Applicative`",
+  "methods": "`(>>=)`, `(>>)`, `return`",
+  "minimal": "`(>>=)`"
+ },
+ {
+  "name": "MonadFail",
+  "prio": "useful",
+  "purpose": "Monads that can fail with a message; used when a pattern on the left of `<-` in `do` does not match.",
+  "kind": "`MonadFail :: (* -> *) -> Constraint`",
+  "sup": "`Monad`",
+  "methods": "`fail`",
+  "minimal": "`fail`"
+ },
+ {
+  "name": "Foldable",
+  "prio": "core",
+  "purpose": "Containers that can be collapsed to a summary value: lists, `Maybe`, `Set`, `Map k`, pairs...",
+  "kind": "`Foldable :: (* -> *) -> Constraint`",
+  "sup": "none",
+  "methods": "`fold`, `foldMap`, `foldMap'`, `foldr`, `foldr'`, `foldl`, `foldl'`, `foldr1`, `foldl1`, `toList`, `null`, `length`, `elem`, `maximum`, `minimum`, `sum`, `product`",
+  "minimal": "`foldMap | foldr`"
+ },
+ {
+  "name": "Traversable",
+  "prio": "core",
+  "purpose": "Walk a container performing an effect for each element and rebuild the same shape.",
+  "kind": "`Traversable :: (* -> *) -> Constraint`",
+  "sup": "`Functor`, `Foldable`",
+  "methods": "`traverse`, `sequenceA`, `mapM`, `sequence`",
+  "minimal": "`traverse | sequenceA`"
+ },
+ {
+  "name": "Semigroup",
+  "prio": "core",
+  "purpose": "Types with an associative combine operation.",
+  "kind": "`Semigroup :: * -> Constraint`",
+  "sup": "none",
+  "methods": "`(<>)`, `sconcat`, `stimes`",
+  "minimal": "`(<>) | sconcat`"
+ },
+ {
+  "name": "Monoid",
+  "prio": "core",
+  "purpose": "A Semigroup with an identity element `mempty`.",
+  "kind": "`Monoid :: * -> Constraint`",
+  "sup": "`Semigroup`",
+  "methods": "`mempty`, `mappend`, `mconcat`",
+  "minimal": "`mempty | mconcat`"
+ },
+ {
+  "name": "Eq",
+  "prio": "core",
+  "purpose": "Equality testing.",
+  "kind": "`Eq :: * -> Constraint`",
+  "sup": "none",
+  "methods": "`(==)`, `(/=)`",
+  "minimal": "`(==) | (/=)`"
+ },
+ {
+  "name": "Ord",
+  "prio": "core",
+  "purpose": "Totally ordered types.",
+  "kind": "`Ord :: * -> Constraint`",
+  "sup": "`Eq`",
+  "methods": "`compare`, `(<)`, `(<=)`, `(>)`, `(>=)`, `max`, `min`",
+  "minimal": "`compare | (<=)`"
+ },
+ {
+  "name": "Bounded",
+  "prio": "core",
+  "purpose": "Types with a smallest and largest value (`Int`, `Char`, `Bool`; not `Integer`).",
+  "kind": "`Bounded :: * -> Constraint`",
+  "sup": "none",
+  "methods": "`minBound`, `maxBound`",
+  "minimal": "`minBound, maxBound`"
+ },
+ {
+  "name": "Enum",
+  "prio": "core",
+  "purpose": "Sequentially ordered types; powers `[a ..]`, `[a, b ..]`, `[a .. c]`, `[a, b .. c]`.",
+  "kind": "`Enum :: * -> Constraint`",
+  "sup": "none",
+  "methods": "`succ`, `pred`, `toEnum`, `fromEnum`, `enumFrom`, `enumFromThen`, `enumFromTo`, `enumFromThenTo`",
+  "minimal": "`toEnum, fromEnum`"
+ },
+ {
+  "name": "Show",
+  "prio": "core",
+  "purpose": "Convert to a `String`.",
+  "kind": "`Show :: * -> Constraint`",
+  "sup": "none",
+  "methods": "`showsPrec`, `show`, `showList`",
+  "minimal": "`showsPrec | show`"
+ },
+ {
+  "name": "Read",
+  "prio": "core",
+  "purpose": "Parse from a `String`; inverse of `Show`.",
+  "kind": "`Read :: * -> Constraint`",
+  "sup": "none",
+  "methods": "`readsPrec`, `readList`, `readPrec`, `readListPrec`",
+  "minimal": "`readsPrec | readPrec`"
+ },
+ {
+  "name": "Num",
+  "prio": "core",
+  "purpose": "Basic arithmetic. Integer literals are `fromInteger n`.",
+  "kind": "`Num :: * -> Constraint`",
+  "sup": "none (not even `Eq`)",
+  "methods": "`(+)`, `(-)`, `(*)`, `negate`, `abs`, `signum`, `fromInteger`",
+  "minimal": "`(+), (*), abs, signum, fromInteger, (negate | (-))`"
+ },
+ {
+  "name": "Real",
+  "prio": "useful",
+  "purpose": "Numbers that convert exactly to `Rational`.",
+  "kind": "`Real :: * -> Constraint`",
+  "sup": "`Num`, `Ord`",
+  "methods": "`toRational`",
+  "minimal": "`toRational`"
+ },
+ {
+  "name": "Integral",
+  "prio": "core",
+  "purpose": "Whole-number types: `Int`, `Integer`, `Word`.",
+  "kind": "`Integral :: * -> Constraint`",
+  "sup": "`Real`, `Enum`",
+  "methods": "`quot`, `rem`, `div`, `mod`, `quotRem`, `divMod`, `toInteger`",
+  "minimal": "`quotRem, toInteger`"
+ },
+ {
+  "name": "Fractional",
+  "prio": "core",
+  "purpose": "Numbers with division: `Double`, `Float`, `Rational`. Decimal literals are `fromRational r`.",
+  "kind": "`Fractional :: * -> Constraint`",
+  "sup": "`Num`",
+  "methods": "`(/)`, `recip`, `fromRational`",
+  "minimal": "`fromRational, (recip | (/))`"
+ },
+ {
+  "name": "Floating",
+  "prio": "core",
+  "purpose": "Exponentials, logs, trig: `Float`, `Double`.",
+  "kind": "`Floating :: * -> Constraint`",
+  "sup": "`Fractional`",
+  "methods": "`pi`, `exp`, `log`, `sqrt`, `(**)`, `logBase`, `sin`, `cos`, `tan`, `asin`, `acos`, `atan`, `sinh`, `cosh`, `tanh`, `asinh`, `acosh`, `atanh`, `log1p`, `expm1`, `log1pexp`, `log1mexp`",
+  "minimal": "`pi, exp, log, sin, cos, asin, acos, atan, sinh, cosh, asinh, acosh, atanh`"
+ },
+ {
+  "name": "RealFrac",
+  "prio": "core",
+  "purpose": "Fractional numbers that can be rounded to whole numbers.",
+  "kind": "`RealFrac :: * -> Constraint`",
+  "sup": "`Real`, `Fractional`",
+  "methods": "`properFraction`, `truncate`, `round`, `ceiling`, `floor`",
+  "minimal": "`properFraction`"
+ },
+ {
+  "name": "RealFloat",
+  "prio": "useful",
+  "purpose": "Internals of IEEE floating-point numbers.",
+  "kind": "`RealFloat :: * -> Constraint`",
+  "sup": "`RealFrac`, `Floating`",
+  "methods": "`floatRadix`, `floatDigits`, `floatRange`, `decodeFloat`, `encodeFloat`, `exponent`, `significand`, `scaleFloat`, `isNaN`, `isInfinite`, `isDenormalized`, `isNegativeZero`, `isIEEE`, `atan2`",
+  "minimal": "`floatRadix, floatDigits, floatRange, decodeFloat, encodeFloat, isNaN, isInfinite, isDenormalized, isNegativeZero, isIEEE`"
+ }
+]

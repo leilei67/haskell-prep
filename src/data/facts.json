@@ -1,0 +1,1578 @@
+[
+ {
+  "id": "notation:0",
+  "q": "What does `x :: T` mean?",
+  "a": "`x` has type `T`.",
+  "group": "notation",
+  "topic": "notation",
+  "prio": "core"
+ },
+ {
+  "id": "notation:1",
+  "q": "What does the part before `=>` in a type mean?",
+  "a": "A constraint: the type variables must be instances of those classes. `Eq a => a -> a -> Bool` works for any `a` with an `Eq` instance.",
+  "group": "notation",
+  "topic": "notation",
+  "prio": "core"
+ },
+ {
+  "id": "notation:2",
+  "q": "In kinds, what is `*`?",
+  "a": "The old name for `Type`: the kind of ordinary types like `Int`, `Bool`, `[Char]`.",
+  "group": "notation",
+  "topic": "notation",
+  "prio": "core"
+ },
+ {
+  "id": "notation:3",
+  "q": "What kind does `Maybe` have, and why?",
+  "a": "`* -> *`. It needs one more type (`Maybe Int`) before it is an ordinary type.",
+  "group": "notation",
+  "topic": "notation",
+  "prio": "core"
+ },
+ {
+  "id": "notation:4",
+  "q": "What kind does `Either` have?",
+  "a": "`* -> * -> *`. It needs two types, e.g. `Either String Int`.",
+  "group": "notation",
+  "topic": "notation",
+  "prio": "core"
+ },
+ {
+  "id": "notation:5",
+  "q": "What is the kind `Constraint`?",
+  "a": "The kind of things that go before `=>`, e.g. `Eq a`. `Eq :: * -> Constraint`.",
+  "group": "notation",
+  "topic": "notation",
+  "prio": "core"
+ },
+ {
+  "id": "notation:6",
+  "q": "What is a line like `type Functor :: (* -> *) -> Constraint`?",
+  "a": "A kind signature: `Functor` takes a type constructor of kind `* -> *` and gives a constraint.",
+  "group": "notation",
+  "topic": "notation",
+  "prio": "core"
+ },
+ {
+  "id": "notation:7",
+  "q": "What does a trailing `#` mean in names like `Int#` or `I#`?",
+  "a": "An unboxed primitive: a raw machine value inside GHC. `data Int = I# Int#` boxes a raw machine int. You never write these.",
+  "group": "notation",
+  "topic": "notation",
+  "prio": "core"
+ },
+ {
+  "id": "notation:8",
+  "q": "What does `HasCallStack =>` in a signature mean?",
+  "a": "If the function crashes, the error message includes the call site. Seen on partial functions: `head`, `tail`, `init`, `last`, `(!!)`, `cycle`, `error`, `undefined`.",
+  "group": "notation",
+  "topic": "notation",
+  "prio": "core"
+ },
+ {
+  "id": "notation:9",
+  "q": "What does `{-# MINIMAL ... #-}` tell you?",
+  "a": "Which methods you must define to write an instance; the rest have defaults. A comma means AND, `|` means OR.",
+  "group": "notation",
+  "topic": "notation",
+  "prio": "core"
+ },
+ {
+  "id": "notation:10",
+  "q": "In `:browse Prelude`, why are some names printed fully qualified (e.g. `GHC.Internal.Data.Foldable.toList`)?",
+  "a": "They are class methods that exist but are NOT exported from the Prelude under their short name. You need an import (e.g. `Data.Foldable`) to call them.",
+  "group": "notation",
+  "topic": "notation",
+  "prio": "core"
+ },
+ {
+  "id": "notation:11",
+  "q": "What is WHNF?",
+  "a": "Weak head normal form: evaluated just far enough to see the outermost constructor or lambda. `seq` and `$!` evaluate to WHNF.",
+  "group": "notation",
+  "topic": "notation",
+  "prio": "core"
+ },
+ {
+  "id": "notation:12",
+  "q": "What does a superclass mean, e.g. `class Eq a => Ord a`?",
+  "a": "Every instance of `Ord` must also be an instance of `Eq`.",
+  "group": "notation",
+  "topic": "notation",
+  "prio": "core"
+ },
+ {
+  "id": "notation:13",
+  "q": "Difference between `data`, `newtype` and `type`?",
+  "a": "`data`: a new type with constructors. `newtype`: a new type with exactly one constructor and one field, no runtime cost. `type`: just another name (a synonym) for an existing type.",
+  "group": "notation",
+  "topic": "notation",
+  "prio": "core"
+ },
+ {
+  "id": "notation:14",
+  "q": "Which imports give you the qualified-only methods in the browse output?",
+  "a": "`fold`, `foldMap'`, `foldr'`, `toList`: `Data.Foldable`.\n`log1p`, `expm1`, `log1pexp`, `log1mexp`: `Numeric`.\n`sconcat`, `stimes`: `Data.Semigroup`.\n`readPrec`, `readListPrec`: `Text.Read`.",
+  "group": "notation",
+  "topic": "notation",
+  "prio": "core"
+ },
+ {
+  "id": "types:15",
+  "q": "Definition of `Bool`?",
+  "a": "`data Bool = False | True`. Kind `*`. `False < True`.",
+  "group": "types",
+  "topic": "types",
+  "prio": "core"
+ },
+ {
+  "id": "types:16",
+  "q": "Definition of `Maybe`?",
+  "a": "`data Maybe a = Nothing | Just a`. Kind `* -> *`. An optional value.",
+  "group": "types",
+  "topic": "types",
+  "prio": "core"
+ },
+ {
+  "id": "types:17",
+  "q": "Definition of `Either`?",
+  "a": "`data Either a b = Left a | Right b`. Kind `* -> * -> *`. Convention: `Left` = error, `Right` = success.",
+  "group": "types",
+  "topic": "types",
+  "prio": "core"
+ },
+ {
+  "id": "types:18",
+  "q": "Definition of `Ordering`?",
+  "a": "`data Ordering = LT | EQ | GT`. The result of `compare`. It is a Monoid: `compare a1 a2 <> compare b1 b2` compares lexicographically.",
+  "group": "types",
+  "topic": "types",
+  "prio": "core"
+ },
+ {
+  "id": "types:19",
+  "q": "What is `String`?",
+  "a": "`type String = [Char]`. A list of characters, so every list function works on it.",
+  "group": "types",
+  "topic": "types",
+  "prio": "core"
+ },
+ {
+  "id": "types:20",
+  "q": "What is `FilePath`?",
+  "a": "`type FilePath = String`. Just a readable synonym.",
+  "group": "types",
+  "topic": "types",
+  "prio": "useful"
+ },
+ {
+  "id": "types:21",
+  "q": "What is `ShowS`?",
+  "a": "`type ShowS = String -> String`. Text waiting to have more text appended; composing with `.` avoids repeated `++` copying.",
+  "group": "types",
+  "topic": "types",
+  "prio": "rare"
+ },
+ {
+  "id": "types:22",
+  "q": "What is `ReadS a`?",
+  "a": "`type ReadS a = String -> [(a, String)]`. An old-style parser returning every (value, leftover input) parse. `[]` means failure.",
+  "group": "types",
+  "topic": "types",
+  "prio": "useful"
+ },
+ {
+  "id": "types:23",
+  "q": "What is `Rational`?",
+  "a": "`type Rational = Ratio Integer`. Exact fractions; build with `%` from `Data.Ratio`: `1 % 3 + 1 % 6 == 1 % 2`.",
+  "group": "types",
+  "topic": "types",
+  "prio": "useful"
+ },
+ {
+  "id": "types:24",
+  "q": "What is `IOError`?",
+  "a": "`type IOError = IOException`. The type of I/O failures such as file not found.",
+  "group": "types",
+  "topic": "types",
+  "prio": "rare"
+ },
+ {
+  "id": "types:25",
+  "q": "What is `Int`?",
+  "a": "A fixed-size machine integer (64-bit on your Mac), `data Int = I# Int#`. Wraps on overflow: `maxBound + 1 == (minBound :: Int)`.",
+  "group": "types",
+  "topic": "types",
+  "prio": "core"
+ },
+ {
+  "id": "types:26",
+  "q": "What is `Integer`?",
+  "a": "An unbounded integer. Constructors `IS` (small, fits a machine word), `IP` (big positive), `IN` (big negative). Integer literals default to `Integer`.",
+  "group": "types",
+  "topic": "types",
+  "prio": "core"
+ },
+ {
+  "id": "types:27",
+  "q": "What is `Word`?",
+  "a": "An unsigned machine integer, `data Word = W# Word#`. `(0 :: Word) - 1 == 18446744073709551615`.",
+  "group": "types",
+  "topic": "types",
+  "prio": "useful"
+ },
+ {
+  "id": "types:28",
+  "q": "What is `Double` vs `Float`?",
+  "a": "`Double`: 64-bit IEEE float (`D# Double#`). `Float`: 32-bit (`F# Float#`), less precise. Use `Double` by default.",
+  "group": "types",
+  "topic": "types",
+  "prio": "core"
+ },
+ {
+  "id": "types:29",
+  "q": "What is `Char`?",
+  "a": "One Unicode code point, `data Char = C# Char#`. `maxBound :: Char == '\\1114111'`.",
+  "group": "types",
+  "topic": "types",
+  "prio": "core"
+ },
+ {
+  "id": "types:30",
+  "q": "How is `IO a` represented inside GHC?",
+  "a": "`newtype IO a = IO (State# RealWorld -> (# State# RealWorld, a #))`: a function from a world token to a new world token plus a result. Passing the token along orders the side effects.",
+  "group": "types",
+  "topic": "types",
+  "prio": "rare"
+ },
+ {
+  "id": "types:31",
+  "q": "What is `(~)`?",
+  "a": "Type equality. `type (~) :: forall k. k -> k -> Constraint`. `(a ~ Int) => ...` means `a` must be `Int`. Built into the compiler; works for types of any kind.",
+  "group": "types",
+  "topic": "types",
+  "prio": "rare"
+ },
+ {
+  "id": "class:Functor:purpose",
+  "q": "Class `Functor`: what is it for?",
+  "a": "Things you can map a function over without changing their shape. Laws: `fmap id == id`, `fmap (f . g) == fmap f . fmap g`.",
+  "group": "class-purpose",
+  "topic": "class:Functor",
+  "prio": "core"
+ },
+ {
+  "id": "class:Functor:kind",
+  "q": "Class `Functor`: kind?",
+  "a": "`Functor :: (* -> *) -> Constraint`",
+  "group": "class-kind",
+  "topic": "class:Functor",
+  "prio": "core"
+ },
+ {
+  "id": "class:Functor:sup",
+  "q": "Class `Functor`: superclass(es)?",
+  "a": "none",
+  "group": "class-sup",
+  "topic": "class:Functor",
+  "prio": "core"
+ },
+ {
+  "id": "class:Functor:methods",
+  "q": "Class `Functor`: all methods listed in the Prelude browse?",
+  "a": "`fmap`, `(<$)`",
+  "group": "class-methods",
+  "topic": "class:Functor",
+  "prio": "core"
+ },
+ {
+  "id": "class:Functor:minimal",
+  "q": "Class `Functor`: MINIMAL complete definition?",
+  "a": "`fmap`",
+  "group": "class-minimal",
+  "topic": "class:Functor",
+  "prio": "core"
+ },
+ {
+  "id": "class:Applicative:purpose",
+  "q": "Class `Applicative`: what is it for?",
+  "a": "Apply functions that are themselves inside a context; combine independent effects.",
+  "group": "class-purpose",
+  "topic": "class:Applicative",
+  "prio": "core"
+ },
+ {
+  "id": "class:Applicative:kind",
+  "q": "Class `Applicative`: kind?",
+  "a": "`Applicative :: (* -> *) -> Constraint`",
+  "group": "class-kind",
+  "topic": "class:Applicative",
+  "prio": "core"
+ },
+ {
+  "id": "class:Applicative:sup",
+  "q": "Class `Applicative`: superclass(es)?",
+  "a": "`Functor`",
+  "group": "class-sup",
+  "topic": "class:Applicative",
+  "prio": "core"
+ },
+ {
+  "id": "class:Applicative:methods",
+  "q": "Class `Applicative`: all methods listed in the Prelude browse?",
+  "a": "`pure`, `(<*>)`, `liftA2`, `(*>)`, `(<*)`",
+  "group": "class-methods",
+  "topic": "class:Applicative",
+  "prio": "core"
+ },
+ {
+  "id": "class:Applicative:minimal",
+  "q": "Class `Applicative`: MINIMAL complete definition?",
+  "a": "`pure, ((<*>) | liftA2)`",
+  "group": "class-minimal",
+  "topic": "class:Applicative",
+  "prio": "core"
+ },
+ {
+  "id": "class:Monad:purpose",
+  "q": "Class `Monad`: what is it for?",
+  "a": "Sequence effects where the next step depends on the previous result. `do` notation turns into `>>=`.",
+  "group": "class-purpose",
+  "topic": "class:Monad",
+  "prio": "core"
+ },
+ {
+  "id": "class:Monad:kind",
+  "q": "Class `Monad`: kind?",
+  "a": "`Monad :: (* -> *) -> Constraint`",
+  "group": "class-kind",
+  "topic": "class:Monad",
+  "prio": "core"
+ },
+ {
+  "id": "class:Monad:sup",
+  "q": "Class `Monad`: superclass(es)?",
+  "a": "`Applicative`",
+  "group": "class-sup",
+  "topic": "class:Monad",
+  "prio": "core"
+ },
+ {
+  "id": "class:Monad:methods",
+  "q": "Class `Monad`: all methods listed in the Prelude browse?",
+  "a": "`(>>=)`, `(>>)`, `return`",
+  "group": "class-methods",
+  "topic": "class:Monad",
+  "prio": "core"
+ },
+ {
+  "id": "class:Monad:minimal",
+  "q": "Class `Monad`: MINIMAL complete definition?",
+  "a": "`(>>=)`",
+  "group": "class-minimal",
+  "topic": "class:Monad",
+  "prio": "core"
+ },
+ {
+  "id": "class:MonadFail:purpose",
+  "q": "Class `MonadFail`: what is it for?",
+  "a": "Monads that can fail with a message; used when a pattern on the left of `<-` in `do` does not match.",
+  "group": "class-purpose",
+  "topic": "class:MonadFail",
+  "prio": "useful"
+ },
+ {
+  "id": "class:MonadFail:kind",
+  "q": "Class `MonadFail`: kind?",
+  "a": "`MonadFail :: (* -> *) -> Constraint`",
+  "group": "class-kind",
+  "topic": "class:MonadFail",
+  "prio": "useful"
+ },
+ {
+  "id": "class:MonadFail:sup",
+  "q": "Class `MonadFail`: superclass(es)?",
+  "a": "`Monad`",
+  "group": "class-sup",
+  "topic": "class:MonadFail",
+  "prio": "useful"
+ },
+ {
+  "id": "class:MonadFail:methods",
+  "q": "Class `MonadFail`: all methods listed in the Prelude browse?",
+  "a": "`fail`",
+  "group": "class-methods",
+  "topic": "class:MonadFail",
+  "prio": "useful"
+ },
+ {
+  "id": "class:MonadFail:minimal",
+  "q": "Class `MonadFail`: MINIMAL complete definition?",
+  "a": "`fail`",
+  "group": "class-minimal",
+  "topic": "class:MonadFail",
+  "prio": "useful"
+ },
+ {
+  "id": "class:Foldable:purpose",
+  "q": "Class `Foldable`: what is it for?",
+  "a": "Containers that can be collapsed to a summary value: lists, `Maybe`, `Set`, `Map k`, pairs...",
+  "group": "class-purpose",
+  "topic": "class:Foldable",
+  "prio": "core"
+ },
+ {
+  "id": "class:Foldable:kind",
+  "q": "Class `Foldable`: kind?",
+  "a": "`Foldable :: (* -> *) -> Constraint`",
+  "group": "class-kind",
+  "topic": "class:Foldable",
+  "prio": "core"
+ },
+ {
+  "id": "class:Foldable:sup",
+  "q": "Class `Foldable`: superclass(es)?",
+  "a": "none",
+  "group": "class-sup",
+  "topic": "class:Foldable",
+  "prio": "core"
+ },
+ {
+  "id": "class:Foldable:methods",
+  "q": "Class `Foldable`: all methods listed in the Prelude browse?",
+  "a": "`fold`, `foldMap`, `foldMap'`, `foldr`, `foldr'`, `foldl`, `foldl'`, `foldr1`, `foldl1`, `toList`, `null`, `length`, `elem`, `maximum`, `minimum`, `sum`, `product`",
+  "group": "class-methods",
+  "topic": "class:Foldable",
+  "prio": "core"
+ },
+ {
+  "id": "class:Foldable:minimal",
+  "q": "Class `Foldable`: MINIMAL complete definition?",
+  "a": "`foldMap | foldr`",
+  "group": "class-minimal",
+  "topic": "class:Foldable",
+  "prio": "core"
+ },
+ {
+  "id": "class:Traversable:purpose",
+  "q": "Class `Traversable`: what is it for?",
+  "a": "Walk a container performing an effect for each element and rebuild the same shape.",
+  "group": "class-purpose",
+  "topic": "class:Traversable",
+  "prio": "core"
+ },
+ {
+  "id": "class:Traversable:kind",
+  "q": "Class `Traversable`: kind?",
+  "a": "`Traversable :: (* -> *) -> Constraint`",
+  "group": "class-kind",
+  "topic": "class:Traversable",
+  "prio": "core"
+ },
+ {
+  "id": "class:Traversable:sup",
+  "q": "Class `Traversable`: superclass(es)?",
+  "a": "`Functor`, `Foldable`",
+  "group": "class-sup",
+  "topic": "class:Traversable",
+  "prio": "core"
+ },
+ {
+  "id": "class:Traversable:methods",
+  "q": "Class `Traversable`: all methods listed in the Prelude browse?",
+  "a": "`traverse`, `sequenceA`, `mapM`, `sequence`",
+  "group": "class-methods",
+  "topic": "class:Traversable",
+  "prio": "core"
+ },
+ {
+  "id": "class:Traversable:minimal",
+  "q": "Class `Traversable`: MINIMAL complete definition?",
+  "a": "`traverse | sequenceA`",
+  "group": "class-minimal",
+  "topic": "class:Traversable",
+  "prio": "core"
+ },
+ {
+  "id": "class:Semigroup:purpose",
+  "q": "Class `Semigroup`: what is it for?",
+  "a": "Types with an associative combine operation.",
+  "group": "class-purpose",
+  "topic": "class:Semigroup",
+  "prio": "core"
+ },
+ {
+  "id": "class:Semigroup:kind",
+  "q": "Class `Semigroup`: kind?",
+  "a": "`Semigroup :: * -> Constraint`",
+  "group": "class-kind",
+  "topic": "class:Semigroup",
+  "prio": "core"
+ },
+ {
+  "id": "class:Semigroup:sup",
+  "q": "Class `Semigroup`: superclass(es)?",
+  "a": "none",
+  "group": "class-sup",
+  "topic": "class:Semigroup",
+  "prio": "core"
+ },
+ {
+  "id": "class:Semigroup:methods",
+  "q": "Class `Semigroup`: all methods listed in the Prelude browse?",
+  "a": "`(<>)`, `sconcat`, `stimes`",
+  "group": "class-methods",
+  "topic": "class:Semigroup",
+  "prio": "core"
+ },
+ {
+  "id": "class:Semigroup:minimal",
+  "q": "Class `Semigroup`: MINIMAL complete definition?",
+  "a": "`(<>) | sconcat`",
+  "group": "class-minimal",
+  "topic": "class:Semigroup",
+  "prio": "core"
+ },
+ {
+  "id": "class:Monoid:purpose",
+  "q": "Class `Monoid`: what is it for?",
+  "a": "A Semigroup with an identity element `mempty`.",
+  "group": "class-purpose",
+  "topic": "class:Monoid",
+  "prio": "core"
+ },
+ {
+  "id": "class:Monoid:kind",
+  "q": "Class `Monoid`: kind?",
+  "a": "`Monoid :: * -> Constraint`",
+  "group": "class-kind",
+  "topic": "class:Monoid",
+  "prio": "core"
+ },
+ {
+  "id": "class:Monoid:sup",
+  "q": "Class `Monoid`: superclass(es)?",
+  "a": "`Semigroup`",
+  "group": "class-sup",
+  "topic": "class:Monoid",
+  "prio": "core"
+ },
+ {
+  "id": "class:Monoid:methods",
+  "q": "Class `Monoid`: all methods listed in the Prelude browse?",
+  "a": "`mempty`, `mappend`, `mconcat`",
+  "group": "class-methods",
+  "topic": "class:Monoid",
+  "prio": "core"
+ },
+ {
+  "id": "class:Monoid:minimal",
+  "q": "Class `Monoid`: MINIMAL complete definition?",
+  "a": "`mempty | mconcat`",
+  "group": "class-minimal",
+  "topic": "class:Monoid",
+  "prio": "core"
+ },
+ {
+  "id": "class:Eq:purpose",
+  "q": "Class `Eq`: what is it for?",
+  "a": "Equality testing.",
+  "group": "class-purpose",
+  "topic": "class:Eq",
+  "prio": "core"
+ },
+ {
+  "id": "class:Eq:kind",
+  "q": "Class `Eq`: kind?",
+  "a": "`Eq :: * -> Constraint`",
+  "group": "class-kind",
+  "topic": "class:Eq",
+  "prio": "core"
+ },
+ {
+  "id": "class:Eq:sup",
+  "q": "Class `Eq`: superclass(es)?",
+  "a": "none",
+  "group": "class-sup",
+  "topic": "class:Eq",
+  "prio": "core"
+ },
+ {
+  "id": "class:Eq:methods",
+  "q": "Class `Eq`: all methods listed in the Prelude browse?",
+  "a": "`(==)`, `(/=)`",
+  "group": "class-methods",
+  "topic": "class:Eq",
+  "prio": "core"
+ },
+ {
+  "id": "class:Eq:minimal",
+  "q": "Class `Eq`: MINIMAL complete definition?",
+  "a": "`(==) | (/=)`",
+  "group": "class-minimal",
+  "topic": "class:Eq",
+  "prio": "core"
+ },
+ {
+  "id": "class:Ord:purpose",
+  "q": "Class `Ord`: what is it for?",
+  "a": "Totally ordered types.",
+  "group": "class-purpose",
+  "topic": "class:Ord",
+  "prio": "core"
+ },
+ {
+  "id": "class:Ord:kind",
+  "q": "Class `Ord`: kind?",
+  "a": "`Ord :: * -> Constraint`",
+  "group": "class-kind",
+  "topic": "class:Ord",
+  "prio": "core"
+ },
+ {
+  "id": "class:Ord:sup",
+  "q": "Class `Ord`: superclass(es)?",
+  "a": "`Eq`",
+  "group": "class-sup",
+  "topic": "class:Ord",
+  "prio": "core"
+ },
+ {
+  "id": "class:Ord:methods",
+  "q": "Class `Ord`: all methods listed in the Prelude browse?",
+  "a": "`compare`, `(<)`, `(<=)`, `(>)`, `(>=)`, `max`, `min`",
+  "group": "class-methods",
+  "topic": "class:Ord",
+  "prio": "core"
+ },
+ {
+  "id": "class:Ord:minimal",
+  "q": "Class `Ord`: MINIMAL complete definition?",
+  "a": "`compare | (<=)`",
+  "group": "class-minimal",
+  "topic": "class:Ord",
+  "prio": "core"
+ },
+ {
+  "id": "class:Bounded:purpose",
+  "q": "Class `Bounded`: what is it for?",
+  "a": "Types with a smallest and largest value (`Int`, `Char`, `Bool`; not `Integer`).",
+  "group": "class-purpose",
+  "topic": "class:Bounded",
+  "prio": "core"
+ },
+ {
+  "id": "class:Bounded:kind",
+  "q": "Class `Bounded`: kind?",
+  "a": "`Bounded :: * -> Constraint`",
+  "group": "class-kind",
+  "topic": "class:Bounded",
+  "prio": "core"
+ },
+ {
+  "id": "class:Bounded:sup",
+  "q": "Class `Bounded`: superclass(es)?",
+  "a": "none",
+  "group": "class-sup",
+  "topic": "class:Bounded",
+  "prio": "core"
+ },
+ {
+  "id": "class:Bounded:methods",
+  "q": "Class `Bounded`: all methods listed in the Prelude browse?",
+  "a": "`minBound`, `maxBound`",
+  "group": "class-methods",
+  "topic": "class:Bounded",
+  "prio": "core"
+ },
+ {
+  "id": "class:Bounded:minimal",
+  "q": "Class `Bounded`: MINIMAL complete definition?",
+  "a": "`minBound, maxBound`",
+  "group": "class-minimal",
+  "topic": "class:Bounded",
+  "prio": "core"
+ },
+ {
+  "id": "class:Enum:purpose",
+  "q": "Class `Enum`: what is it for?",
+  "a": "Sequentially ordered types; powers `[a ..]`, `[a, b ..]`, `[a .. c]`, `[a, b .. c]`.",
+  "group": "class-purpose",
+  "topic": "class:Enum",
+  "prio": "core"
+ },
+ {
+  "id": "class:Enum:kind",
+  "q": "Class `Enum`: kind?",
+  "a": "`Enum :: * -> Constraint`",
+  "group": "class-kind",
+  "topic": "class:Enum",
+  "prio": "core"
+ },
+ {
+  "id": "class:Enum:sup",
+  "q": "Class `Enum`: superclass(es)?",
+  "a": "none",
+  "group": "class-sup",
+  "topic": "class:Enum",
+  "prio": "core"
+ },
+ {
+  "id": "class:Enum:methods",
+  "q": "Class `Enum`: all methods listed in the Prelude browse?",
+  "a": "`succ`, `pred`, `toEnum`, `fromEnum`, `enumFrom`, `enumFromThen`, `enumFromTo`, `enumFromThenTo`",
+  "group": "class-methods",
+  "topic": "class:Enum",
+  "prio": "core"
+ },
+ {
+  "id": "class:Enum:minimal",
+  "q": "Class `Enum`: MINIMAL complete definition?",
+  "a": "`toEnum, fromEnum`",
+  "group": "class-minimal",
+  "topic": "class:Enum",
+  "prio": "core"
+ },
+ {
+  "id": "class:Show:purpose",
+  "q": "Class `Show`: what is it for?",
+  "a": "Convert to a `String`.",
+  "group": "class-purpose",
+  "topic": "class:Show",
+  "prio": "core"
+ },
+ {
+  "id": "class:Show:kind",
+  "q": "Class `Show`: kind?",
+  "a": "`Show :: * -> Constraint`",
+  "group": "class-kind",
+  "topic": "class:Show",
+  "prio": "core"
+ },
+ {
+  "id": "class:Show:sup",
+  "q": "Class `Show`: superclass(es)?",
+  "a": "none",
+  "group": "class-sup",
+  "topic": "class:Show",
+  "prio": "core"
+ },
+ {
+  "id": "class:Show:methods",
+  "q": "Class `Show`: all methods listed in the Prelude browse?",
+  "a": "`showsPrec`, `show`, `showList`",
+  "group": "class-methods",
+  "topic": "class:Show",
+  "prio": "core"
+ },
+ {
+  "id": "class:Show:minimal",
+  "q": "Class `Show`: MINIMAL complete definition?",
+  "a": "`showsPrec | show`",
+  "group": "class-minimal",
+  "topic": "class:Show",
+  "prio": "core"
+ },
+ {
+  "id": "class:Read:purpose",
+  "q": "Class `Read`: what is it for?",
+  "a": "Parse from a `String`; inverse of `Show`.",
+  "group": "class-purpose",
+  "topic": "class:Read",
+  "prio": "core"
+ },
+ {
+  "id": "class:Read:kind",
+  "q": "Class `Read`: kind?",
+  "a": "`Read :: * -> Constraint`",
+  "group": "class-kind",
+  "topic": "class:Read",
+  "prio": "core"
+ },
+ {
+  "id": "class:Read:sup",
+  "q": "Class `Read`: superclass(es)?",
+  "a": "none",
+  "group": "class-sup",
+  "topic": "class:Read",
+  "prio": "core"
+ },
+ {
+  "id": "class:Read:methods",
+  "q": "Class `Read`: all methods listed in the Prelude browse?",
+  "a": "`readsPrec`, `readList`, `readPrec`, `readListPrec`",
+  "group": "class-methods",
+  "topic": "class:Read",
+  "prio": "core"
+ },
+ {
+  "id": "class:Read:minimal",
+  "q": "Class `Read`: MINIMAL complete definition?",
+  "a": "`readsPrec | readPrec`",
+  "group": "class-minimal",
+  "topic": "class:Read",
+  "prio": "core"
+ },
+ {
+  "id": "class:Num:purpose",
+  "q": "Class `Num`: what is it for?",
+  "a": "Basic arithmetic. Integer literals are `fromInteger n`.",
+  "group": "class-purpose",
+  "topic": "class:Num",
+  "prio": "core"
+ },
+ {
+  "id": "class:Num:kind",
+  "q": "Class `Num`: kind?",
+  "a": "`Num :: * -> Constraint`",
+  "group": "class-kind",
+  "topic": "class:Num",
+  "prio": "core"
+ },
+ {
+  "id": "class:Num:sup",
+  "q": "Class `Num`: superclass(es)?",
+  "a": "none (not even `Eq`)",
+  "group": "class-sup",
+  "topic": "class:Num",
+  "prio": "core"
+ },
+ {
+  "id": "class:Num:methods",
+  "q": "Class `Num`: all methods listed in the Prelude browse?",
+  "a": "`(+)`, `(-)`, `(*)`, `negate`, `abs`, `signum`, `fromInteger`",
+  "group": "class-methods",
+  "topic": "class:Num",
+  "prio": "core"
+ },
+ {
+  "id": "class:Num:minimal",
+  "q": "Class `Num`: MINIMAL complete definition?",
+  "a": "`(+), (*), abs, signum, fromInteger, (negate | (-))`",
+  "group": "class-minimal",
+  "topic": "class:Num",
+  "prio": "core"
+ },
+ {
+  "id": "class:Real:purpose",
+  "q": "Class `Real`: what is it for?",
+  "a": "Numbers that convert exactly to `Rational`.",
+  "group": "class-purpose",
+  "topic": "class:Real",
+  "prio": "useful"
+ },
+ {
+  "id": "class:Real:kind",
+  "q": "Class `Real`: kind?",
+  "a": "`Real :: * -> Constraint`",
+  "group": "class-kind",
+  "topic": "class:Real",
+  "prio": "useful"
+ },
+ {
+  "id": "class:Real:sup",
+  "q": "Class `Real`: superclass(es)?",
+  "a": "`Num`, `Ord`",
+  "group": "class-sup",
+  "topic": "class:Real",
+  "prio": "useful"
+ },
+ {
+  "id": "class:Real:methods",
+  "q": "Class `Real`: all methods listed in the Prelude browse?",
+  "a": "`toRational`",
+  "group": "class-methods",
+  "topic": "class:Real",
+  "prio": "useful"
+ },
+ {
+  "id": "class:Real:minimal",
+  "q": "Class `Real`: MINIMAL complete definition?",
+  "a": "`toRational`",
+  "group": "class-minimal",
+  "topic": "class:Real",
+  "prio": "useful"
+ },
+ {
+  "id": "class:Integral:purpose",
+  "q": "Class `Integral`: what is it for?",
+  "a": "Whole-number types: `Int`, `Integer`, `Word`.",
+  "group": "class-purpose",
+  "topic": "class:Integral",
+  "prio": "core"
+ },
+ {
+  "id": "class:Integral:kind",
+  "q": "Class `Integral`: kind?",
+  "a": "`Integral :: * -> Constraint`",
+  "group": "class-kind",
+  "topic": "class:Integral",
+  "prio": "core"
+ },
+ {
+  "id": "class:Integral:sup",
+  "q": "Class `Integral`: superclass(es)?",
+  "a": "`Real`, `Enum`",
+  "group": "class-sup",
+  "topic": "class:Integral",
+  "prio": "core"
+ },
+ {
+  "id": "class:Integral:methods",
+  "q": "Class `Integral`: all methods listed in the Prelude browse?",
+  "a": "`quot`, `rem`, `div`, `mod`, `quotRem`, `divMod`, `toInteger`",
+  "group": "class-methods",
+  "topic": "class:Integral",
+  "prio": "core"
+ },
+ {
+  "id": "class:Integral:minimal",
+  "q": "Class `Integral`: MINIMAL complete definition?",
+  "a": "`quotRem, toInteger`",
+  "group": "class-minimal",
+  "topic": "class:Integral",
+  "prio": "core"
+ },
+ {
+  "id": "class:Fractional:purpose",
+  "q": "Class `Fractional`: what is it for?",
+  "a": "Numbers with division: `Double`, `Float`, `Rational`. Decimal literals are `fromRational r`.",
+  "group": "class-purpose",
+  "topic": "class:Fractional",
+  "prio": "core"
+ },
+ {
+  "id": "class:Fractional:kind",
+  "q": "Class `Fractional`: kind?",
+  "a": "`Fractional :: * -> Constraint`",
+  "group": "class-kind",
+  "topic": "class:Fractional",
+  "prio": "core"
+ },
+ {
+  "id": "class:Fractional:sup",
+  "q": "Class `Fractional`: superclass(es)?",
+  "a": "`Num`",
+  "group": "class-sup",
+  "topic": "class:Fractional",
+  "prio": "core"
+ },
+ {
+  "id": "class:Fractional:methods",
+  "q": "Class `Fractional`: all methods listed in the Prelude browse?",
+  "a": "`(/)`, `recip`, `fromRational`",
+  "group": "class-methods",
+  "topic": "class:Fractional",
+  "prio": "core"
+ },
+ {
+  "id": "class:Fractional:minimal",
+  "q": "Class `Fractional`: MINIMAL complete definition?",
+  "a": "`fromRational, (recip | (/))`",
+  "group": "class-minimal",
+  "topic": "class:Fractional",
+  "prio": "core"
+ },
+ {
+  "id": "class:Floating:purpose",
+  "q": "Class `Floating`: what is it for?",
+  "a": "Exponentials, logs, trig: `Float`, `Double`.",
+  "group": "class-purpose",
+  "topic": "class:Floating",
+  "prio": "core"
+ },
+ {
+  "id": "class:Floating:kind",
+  "q": "Class `Floating`: kind?",
+  "a": "`Floating :: * -> Constraint`",
+  "group": "class-kind",
+  "topic": "class:Floating",
+  "prio": "core"
+ },
+ {
+  "id": "class:Floating:sup",
+  "q": "Class `Floating`: superclass(es)?",
+  "a": "`Fractional`",
+  "group": "class-sup",
+  "topic": "class:Floating",
+  "prio": "core"
+ },
+ {
+  "id": "class:Floating:methods",
+  "q": "Class `Floating`: all methods listed in the Prelude browse?",
+  "a": "`pi`, `exp`, `log`, `sqrt`, `(**)`, `logBase`, `sin`, `cos`, `tan`, `asin`, `acos`, `atan`, `sinh`, `cosh`, `tanh`, `asinh`, `acosh`, `atanh`, `log1p`, `expm1`, `log1pexp`, `log1mexp`",
+  "group": "class-methods",
+  "topic": "class:Floating",
+  "prio": "core"
+ },
+ {
+  "id": "class:Floating:minimal",
+  "q": "Class `Floating`: MINIMAL complete definition?",
+  "a": "`pi, exp, log, sin, cos, asin, acos, atan, sinh, cosh, asinh, acosh, atanh`",
+  "group": "class-minimal",
+  "topic": "class:Floating",
+  "prio": "core"
+ },
+ {
+  "id": "class:RealFrac:purpose",
+  "q": "Class `RealFrac`: what is it for?",
+  "a": "Fractional numbers that can be rounded to whole numbers.",
+  "group": "class-purpose",
+  "topic": "class:RealFrac",
+  "prio": "core"
+ },
+ {
+  "id": "class:RealFrac:kind",
+  "q": "Class `RealFrac`: kind?",
+  "a": "`RealFrac :: * -> Constraint`",
+  "group": "class-kind",
+  "topic": "class:RealFrac",
+  "prio": "core"
+ },
+ {
+  "id": "class:RealFrac:sup",
+  "q": "Class `RealFrac`: superclass(es)?",
+  "a": "`Real`, `Fractional`",
+  "group": "class-sup",
+  "topic": "class:RealFrac",
+  "prio": "core"
+ },
+ {
+  "id": "class:RealFrac:methods",
+  "q": "Class `RealFrac`: all methods listed in the Prelude browse?",
+  "a": "`properFraction`, `truncate`, `round`, `ceiling`, `floor`",
+  "group": "class-methods",
+  "topic": "class:RealFrac",
+  "prio": "core"
+ },
+ {
+  "id": "class:RealFrac:minimal",
+  "q": "Class `RealFrac`: MINIMAL complete definition?",
+  "a": "`properFraction`",
+  "group": "class-minimal",
+  "topic": "class:RealFrac",
+  "prio": "core"
+ },
+ {
+  "id": "class:RealFloat:purpose",
+  "q": "Class `RealFloat`: what is it for?",
+  "a": "Internals of IEEE floating-point numbers.",
+  "group": "class-purpose",
+  "topic": "class:RealFloat",
+  "prio": "useful"
+ },
+ {
+  "id": "class:RealFloat:kind",
+  "q": "Class `RealFloat`: kind?",
+  "a": "`RealFloat :: * -> Constraint`",
+  "group": "class-kind",
+  "topic": "class:RealFloat",
+  "prio": "useful"
+ },
+ {
+  "id": "class:RealFloat:sup",
+  "q": "Class `RealFloat`: superclass(es)?",
+  "a": "`RealFrac`, `Floating`",
+  "group": "class-sup",
+  "topic": "class:RealFloat",
+  "prio": "useful"
+ },
+ {
+  "id": "class:RealFloat:methods",
+  "q": "Class `RealFloat`: all methods listed in the Prelude browse?",
+  "a": "`floatRadix`, `floatDigits`, `floatRange`, `decodeFloat`, `encodeFloat`, `exponent`, `significand`, `scaleFloat`, `isNaN`, `isInfinite`, `isDenormalized`, `isNegativeZero`, `isIEEE`, `atan2`",
+  "group": "class-methods",
+  "topic": "class:RealFloat",
+  "prio": "useful"
+ },
+ {
+  "id": "class:RealFloat:minimal",
+  "q": "Class `RealFloat`: MINIMAL complete definition?",
+  "a": "`floatRadix, floatDigits, floatRange, decodeFloat, encodeFloat, isNaN, isInfinite, isDenormalized, isNegativeZero, isIEEE`",
+  "group": "class-minimal",
+  "topic": "class:RealFloat",
+  "prio": "useful"
+ },
+ {
+  "id": "classes:137",
+  "q": "Draw the numeric class hierarchy.",
+  "a": "`Num`\n`Real` (Num, Ord)\n`Fractional` (Num)\n`Integral` (Real, Enum)\n`RealFrac` (Real, Fractional)\n`Floating` (Fractional)\n`RealFloat` (RealFrac, Floating)",
+  "group": "classes",
+  "topic": "classes",
+  "prio": "core"
+ },
+ {
+  "id": "classes:138",
+  "q": "Draw the Functor/Monad hierarchy.",
+  "a": "`Functor` then `Applicative` then `Monad` then `MonadFail`.\n`Foldable` and `Functor` are both superclasses of `Traversable`.",
+  "group": "classes",
+  "topic": "classes",
+  "prio": "core"
+ },
+ {
+  "id": "compare:139",
+  "q": "Three list functions of type `(a -> Bool) -> [a] -> [a]`?",
+  "a": "`filter`, `takeWhile`, `dropWhile`.",
+  "group": "compare",
+  "topic": "compare",
+  "prio": "core"
+ },
+ {
+  "id": "compare:140",
+  "q": "Two functions of type `(a -> Bool) -> [a] -> ([a], [a])`?",
+  "a": "`span` (prefix that passes) and `break` (prefix that fails).",
+  "group": "compare",
+  "topic": "compare",
+  "prio": "core"
+ },
+ {
+  "id": "compare:141",
+  "q": "Two functions of type `Foldable t => (a -> Bool) -> t a -> Bool`?",
+  "a": "`all` and `any`.",
+  "group": "compare",
+  "topic": "compare",
+  "prio": "core"
+ },
+ {
+  "id": "compare:142",
+  "q": "Two functions of type `Foldable t => t Bool -> Bool`?",
+  "a": "`and` and `or`.",
+  "group": "compare",
+  "topic": "compare",
+  "prio": "core"
+ },
+ {
+  "id": "compare:143",
+  "q": "Four partial list functions with `HasCallStack => [a] -> ...`?",
+  "a": "`head`, `last` (return `a`); `tail`, `init` (return `[a]`).",
+  "group": "compare",
+  "topic": "compare",
+  "prio": "core"
+ },
+ {
+  "id": "compare:144",
+  "q": "Two functions of type `Int -> [a] -> [a]`?",
+  "a": "`take` and `drop`.",
+  "group": "compare",
+  "topic": "compare",
+  "prio": "core"
+ },
+ {
+  "id": "compare:145",
+  "q": "Rounding functions of type `(RealFrac a, Integral b) => a -> b`?",
+  "a": "`truncate`, `round`, `ceiling`, `floor`.",
+  "group": "compare",
+  "topic": "compare",
+  "prio": "core"
+ },
+ {
+  "id": "compare:146",
+  "q": "Four Integral methods of type `a -> a -> a`?",
+  "a": "`quot`, `rem`, `div`, `mod`.",
+  "group": "compare",
+  "topic": "compare",
+  "prio": "core"
+ },
+ {
+  "id": "compare:147",
+  "q": "Three power operators and their exponent types?",
+  "a": "`(^)`: non-negative Integral exponent, Num base.\n`(^^)`: any Integral exponent, Fractional base.\n`(**)`: Floating exponent and base.",
+  "group": "compare",
+  "topic": "compare",
+  "prio": "core"
+ },
+ {
+  "id": "compare:148",
+  "q": "`pure` vs `return`?",
+  "a": "Identical behaviour. `pure` needs Applicative, `return` needs Monad.",
+  "group": "compare",
+  "topic": "compare",
+  "prio": "core"
+ },
+ {
+  "id": "compare:149",
+  "q": "`traverse` vs `mapM`, `sequenceA` vs `sequence`?",
+  "a": "Same behaviour; the first of each pair needs only Applicative, the second needs Monad.",
+  "group": "compare",
+  "topic": "compare",
+  "prio": "core"
+ },
+ {
+  "id": "compare:150",
+  "q": "`mapM` vs `mapM_`?",
+  "a": "`mapM` collects results in the container; `mapM_` discards them and returns `()`.",
+  "group": "compare",
+  "topic": "compare",
+  "prio": "core"
+ },
+ {
+  "id": "compare:151",
+  "q": "`(<>)` vs `mappend`?",
+  "a": "Same thing; `mappend` is the old Monoid name.",
+  "group": "compare",
+  "topic": "compare",
+  "prio": "core"
+ },
+ {
+  "id": "compare:152",
+  "q": "`fmap` vs `(<$>)` vs `(<$)`?",
+  "a": "`(<$>)` is infix `fmap`. `(<$)` replaces contents with a constant.",
+  "group": "compare",
+  "topic": "compare",
+  "prio": "core"
+ },
+ {
+  "id": "compare:153",
+  "q": "`(>>=)` vs `(=<<)`?",
+  "a": "Same bind, flipped arguments: `m >>= f == f =<< m`.",
+  "group": "compare",
+  "topic": "compare",
+  "prio": "core"
+ },
+ {
+  "id": "compare:154",
+  "q": "`($)` vs `($!)` vs `seq`?",
+  "a": "`$` plain application. `$!` forces the argument first. `seq a b` forces `a`, returns `b`.",
+  "group": "compare",
+  "topic": "compare",
+  "prio": "core"
+ },
+ {
+  "id": "compare:155",
+  "q": "`curry` vs `uncurry`?",
+  "a": "`curry`: pair function to two-argument function. `uncurry`: the reverse.",
+  "group": "compare",
+  "topic": "compare",
+  "prio": "core"
+ },
+ {
+  "id": "compare:156",
+  "q": "`lines`/`unlines` vs `words`/`unwords`?",
+  "a": "`lines` splits on newlines, `words` on any whitespace. `unlines` adds a newline after each; `unwords` joins with spaces.",
+  "group": "compare",
+  "topic": "compare",
+  "prio": "core"
+ },
+ {
+  "id": "compare:157",
+  "q": "`scanl` vs `scanl1` vs `scanr` vs `scanr1`?",
+  "a": "`scanl (+) 0 [1,2,3] == [0,1,3,6]`\n`scanl1 (+) [1,2,3] == [1,3,6]`\n`scanr (+) 0 [1,2,3] == [6,5,3,0]`\n`scanr1 (+) [1,2,3] == [6,5,3]`",
+  "group": "compare",
+  "topic": "compare",
+  "prio": "core"
+ },
+ {
+  "id": "compare:158",
+  "q": "`fromIntegral` vs `realToFrac` vs `toInteger` vs `toRational`?",
+  "a": "`fromIntegral`: Integral to any Num. `realToFrac`: Real to any Fractional. `toInteger`: to Integer. `toRational`: exact to Rational.",
+  "group": "compare",
+  "topic": "compare",
+  "prio": "core"
+ },
+ {
+  "id": "compare:159",
+  "q": "`read` vs `reads` vs `readIO` vs `readLn`?",
+  "a": "`read`: pure, crashes on failure. `reads`: returns [(value, rest)]. `readIO`: in IO, throws on failure. `readLn`: getLine then readIO.",
+  "group": "compare",
+  "topic": "compare",
+  "prio": "core"
+ },
+ {
+  "id": "compare:160",
+  "q": "`putStr` vs `putStrLn` vs `print`?",
+  "a": "`putStr` no newline; `putStrLn` adds newline; `print` = putStrLn . show (strings get quotes).",
+  "group": "compare",
+  "topic": "compare",
+  "prio": "core"
+ },
+ {
+  "id": "gotchas:161",
+  "q": "`round 2.5` and `round 3.5`?",
+  "a": "`2` and `4`. Ties go to the even number (banker's rounding).",
+  "group": "gotchas",
+  "topic": "gotchas",
+  "prio": "core"
+ },
+ {
+  "id": "gotchas:162",
+  "q": "`div (-7) 2`, `mod (-7) 2`, `quot (-7) 2`, `rem (-7) 2`?",
+  "a": "`-4`, `1`, `-3`, `-1`. div/mod round down; quot/rem round toward zero.",
+  "group": "gotchas",
+  "topic": "gotchas",
+  "prio": "core"
+ },
+ {
+  "id": "gotchas:163",
+  "q": "`length (1, 2)`?",
+  "a": "`1`. A pair is Foldable over its second component only.",
+  "group": "gotchas",
+  "topic": "gotchas",
+  "prio": "core"
+ },
+ {
+  "id": "gotchas:164",
+  "q": "`unlines [\"a\",\"b\"]`?",
+  "a": "`\"a\\nb\\n\"`: a newline after every line, including the last.",
+  "group": "gotchas",
+  "topic": "gotchas",
+  "prio": "core"
+ },
+ {
+  "id": "gotchas:165",
+  "q": "`print \"hi\"` output?",
+  "a": "`\"hi\"` with the quotes, because it uses show.",
+  "group": "gotchas",
+  "topic": "gotchas",
+  "prio": "core"
+ },
+ {
+  "id": "gotchas:166",
+  "q": "Why prefer `foldl'` to `foldl`?",
+  "a": "`foldl` builds a chain of unevaluated thunks and can run out of memory; `foldl'` forces the accumulator each step.",
+  "group": "gotchas",
+  "topic": "gotchas",
+  "prio": "core"
+ },
+ {
+  "id": "gotchas:167",
+  "q": "Why does `map (-1) xs` not subtract 1?",
+  "a": "`(-1)` is the number minus one, not a section. Use `map (subtract 1) xs`.",
+  "group": "gotchas",
+  "topic": "gotchas",
+  "prio": "core"
+ },
+ {
+  "id": "gotchas:168",
+  "q": "Haskell's not-equal operator?",
+  "a": "`/=`, not `!=`.",
+  "group": "gotchas",
+  "topic": "gotchas",
+  "prio": "core"
+ },
+ {
+  "id": "gotchas:169",
+  "q": "Does `return` exit a function?",
+  "a": "No. It only wraps a value: `return x = pure x`.",
+  "group": "gotchas",
+  "topic": "gotchas",
+  "prio": "core"
+ },
+ {
+  "id": "gotchas:170",
+  "q": "What happens with `zip [1,2,3] \"ab\"`?",
+  "a": "`[(1,'a'),(2,'b')]`. It stops at the shorter list.",
+  "group": "gotchas",
+  "topic": "gotchas",
+  "prio": "core"
+ },
+ {
+  "id": "gotchas:171",
+  "q": "Argument order of `logBase` and `atan2`?",
+  "a": "`logBase base x`; `atan2 y x` (y first).",
+  "group": "gotchas",
+  "topic": "gotchas",
+  "prio": "core"
+ },
+ {
+  "id": "gotchas:172",
+  "q": "`maxBound + 1 :: Int`?",
+  "a": "Wraps to `minBound`. Int overflow is silent.",
+  "group": "gotchas",
+  "topic": "gotchas",
+  "prio": "core"
+ },
+ {
+  "id": "gotchas:173",
+  "q": "`(0 :: Word) - 1`?",
+  "a": "`18446744073709551615`. Word wraps below zero.",
+  "group": "gotchas",
+  "topic": "gotchas",
+  "prio": "core"
+ },
+ {
+  "id": "gotchas:174",
+  "q": "Is `NaN == NaN`?",
+  "a": "False. Use `isNaN`.",
+  "group": "gotchas",
+  "topic": "gotchas",
+  "prio": "core"
+ },
+ {
+  "id": "gotchas:175",
+  "q": "`-0.0 == 0.0`?",
+  "a": "True. Use `isNegativeZero` to tell them apart.",
+  "group": "gotchas",
+  "topic": "gotchas",
+  "prio": "core"
+ },
+ {
+  "id": "gotchas:176",
+  "q": "What do `maximum []`, `head []`, `foldr1 f []` do?",
+  "a": "All crash.",
+  "group": "gotchas",
+  "topic": "gotchas",
+  "prio": "core"
+ },
+ {
+  "id": "gotchas:177",
+  "q": "Why does `length xs / 2` fail to type-check?",
+  "a": "`length` gives `Int`, which is not Fractional. Write `fromIntegral (length xs) / 2`.",
+  "group": "gotchas",
+  "topic": "gotchas",
+  "prio": "core"
+ },
+ {
+  "id": "gotchas:178",
+  "q": "What does the literal `5` desugar to? And `3.5`? And `-x`?",
+  "a": "`fromInteger 5`; `fromRational (7 % 2)`; `negate x`.",
+  "group": "gotchas",
+  "topic": "gotchas",
+  "prio": "core"
+ },
+ {
+  "id": "gotchas:179",
+  "q": "`read` crashes on bad input. What safe alternative did you use in labs?",
+  "a": "`readMaybe` from `Text.Read`, returning `Maybe a`.",
+  "group": "gotchas",
+  "topic": "gotchas",
+  "prio": "core"
+ },
+ {
+  "id": "gotchas:180",
+  "q": "`2 ^ (-1)`?",
+  "a": "Runtime error: negative exponent. Use `2 ^^ (-1) == 0.5`.",
+  "group": "gotchas",
+  "topic": "gotchas",
+  "prio": "core"
+ },
+ {
+  "id": "gotchas:181",
+  "q": "`all even []` and `any even []`?",
+  "a": "`True` and `False`.",
+  "group": "gotchas",
+  "topic": "gotchas",
+  "prio": "core"
+ },
+ {
+  "id": "gotchas:182",
+  "q": "`sum []` and `product []`?",
+  "a": "`0` and `1`.",
+  "group": "gotchas",
+  "topic": "gotchas",
+  "prio": "core"
+ },
+ {
+  "id": "gotchas:183",
+  "q": "`drop 5 [1]`, `take 5 [1]`, `drop (-1) [1]`?",
+  "a": "`[]`, `[1]`, `[1]`. take/drop never crash.",
+  "group": "gotchas",
+  "topic": "gotchas",
+  "prio": "core"
+ },
+ {
+  "id": "gotchas:184",
+  "q": "What does `do { (x:_) <- Just [] ; return x }` give?",
+  "a": "`Nothing`, via `fail` from MonadFail.",
+  "group": "gotchas",
+  "topic": "gotchas",
+  "prio": "core"
+ },
+ {
+  "id": "fixity:185",
+  "q": "Fixity of `$`, `$!`, `seq`?",
+  "a": "`infixr 0` (lowest).",
+  "group": "fixity",
+  "topic": "fixity",
+  "prio": "useful"
+ },
+ {
+  "id": "fixity:186",
+  "q": "Fixity of `>>=`, `>>` and `=<<`?",
+  "a": "`>>=`, `>>`: `infixl 1`. `=<<`: `infixr 1`.",
+  "group": "fixity",
+  "topic": "fixity",
+  "prio": "useful"
+ },
+ {
+  "id": "fixity:187",
+  "q": "Fixity of `||` and `&&`?",
+  "a": "`||`: `infixr 2`. `&&`: `infixr 3`.",
+  "group": "fixity",
+  "topic": "fixity",
+  "prio": "useful"
+ },
+ {
+  "id": "fixity:188",
+  "q": "Fixity of `==`, `/=`, `<`, `<=`, `>`, `>=`, `elem`, `notElem`?",
+  "a": "`infix 4` (non-associative: `a == b == c` is an error).",
+  "group": "fixity",
+  "topic": "fixity",
+  "prio": "useful"
+ },
+ {
+  "id": "fixity:189",
+  "q": "Fixity of `<$>`, `<$`, `<*>`, `*>`, `<*`?",
+  "a": "`infixl 4`.",
+  "group": "fixity",
+  "topic": "fixity",
+  "prio": "useful"
+ },
+ {
+  "id": "fixity:190",
+  "q": "Fixity of `++` and `:`?",
+  "a": "`infixr 5`.",
+  "group": "fixity",
+  "topic": "fixity",
+  "prio": "useful"
+ },
+ {
+  "id": "fixity:191",
+  "q": "Fixity of `+` and `-`?",
+  "a": "`infixl 6`.",
+  "group": "fixity",
+  "topic": "fixity",
+  "prio": "useful"
+ },
+ {
+  "id": "fixity:192",
+  "q": "Fixity of `<>`?",
+  "a": "`infixr 6`.",
+  "group": "fixity",
+  "topic": "fixity",
+  "prio": "useful"
+ },
+ {
+  "id": "fixity:193",
+  "q": "Fixity of `*`, `/`, `div`, `mod`, `quot`, `rem`?",
+  "a": "`infixl 7`.",
+  "group": "fixity",
+  "topic": "fixity",
+  "prio": "useful"
+ },
+ {
+  "id": "fixity:194",
+  "q": "Fixity of `^`, `^^`, `**`?",
+  "a": "`infixr 8`: `2 ^ 3 ^ 2 == 2 ^ 9`.",
+  "group": "fixity",
+  "topic": "fixity",
+  "prio": "useful"
+ },
+ {
+  "id": "fixity:195",
+  "q": "Fixity of `.` and `!!`?",
+  "a": "`.`: `infixr 9`. `!!`: `infixl 9` (highest).",
+  "group": "fixity",
+  "topic": "fixity",
+  "prio": "useful"
+ },
+ {
+  "id": "fixity:196",
+  "q": "What is the precedence of function application?",
+  "a": "Higher than any operator: `f x + g y` is `(f x) + (g y)`.",
+  "group": "fixity",
+  "topic": "fixity",
+  "prio": "useful"
+ }
+]

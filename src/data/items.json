@@ -1,0 +1,2232 @@
+[
+ {
+  "id": "fmap",
+  "name": "fmap",
+  "sig": "Functor f => (a -> b) -> f a -> f b",
+  "desc": "Apply a function to every value inside.",
+  "ex": "fmap (+1) (Just 1) == Just 2",
+  "prio": "core",
+  "kind": "method",
+  "explain": "applies a function to every value inside. `fmap (+1) [1,2] == [2,3]`, `fmap (+1) (Just 1) == Just 2`. Laws: `fmap id == id` and `fmap (f . g) == fmap f . fmap g`."
+ },
+ {
+  "id": "(<$)",
+  "name": "(<$)",
+  "sig": "Functor f => a -> f b -> f a",
+  "desc": "Replace every value inside with a constant. infixl 4.",
+  "ex": "'x' <$ [1,2,3] == \"xxx\"",
+  "prio": "useful",
+  "kind": "method",
+  "explain": "replaces every value inside with a constant. `0 <$ Just 5 == Just 0`, `'x' <$ [1,2,3] == \"xxx\"`. `infixl 4`."
+ },
+ {
+  "id": "pure",
+  "name": "pure",
+  "sig": "Applicative f => a -> f a",
+  "desc": "Wrap a value in the minimal context.",
+  "ex": "pure 3 :: [Int] == [3]",
+  "prio": "core",
+  "kind": "method",
+  "explain": "puts a value into the context in the simplest way. `pure 3 :: Maybe Int` is `Just 3`; `pure 3 :: [Int]` is `[3]`."
+ },
+ {
+  "id": "(<*>)",
+  "name": "(<*>)",
+  "sig": "Applicative f => f (a -> b) -> f a -> f b",
+  "desc": "Apply a wrapped function to a wrapped value. infixl 4.",
+  "ex": "[(+1),(*2)] <*> [10,20] == [11,21,20,40]",
+  "prio": "core",
+  "kind": "method",
+  "explain": "\"apply\". It takes a function inside a context and a value inside a context. `Just (+1) <*> Just 2 == Just 3`. For lists it tries every combination: `[(+1),(*2)] <*> [10,20] == [11,21,20,40]`. `infixl 4`."
+ },
+ {
+  "id": "liftA2",
+  "name": "liftA2",
+  "sig": "Applicative f => (a -> b -> c) -> f a -> f b -> f c",
+  "desc": "Lift a two-argument function into the context.",
+  "ex": "liftA2 (+) (Just 1) (Just 2) == Just 3",
+  "prio": "core",
+  "kind": "method",
+  "explain": "lifts a two-argument function into the context. `liftA2 (+) (Just 1) (Just 2) == Just 3`."
+ },
+ {
+  "id": "(*>)",
+  "name": "(*>)",
+  "sig": "Applicative f => f a -> f b -> f b",
+  "desc": "Run both, keep the right result. infixl 4.",
+  "ex": "Nothing *> Just 2 == Nothing",
+  "prio": "useful",
+  "kind": "method",
+  "explain": "runs both, keeps the right result. `Just 1 *> Just 2 == Just 2`, but `Nothing *> Just 2 == Nothing`. `infixl 4`."
+ },
+ {
+  "id": "(<*)",
+  "name": "(<*)",
+  "sig": "Applicative f => f a -> f b -> f a",
+  "desc": "Run both, keep the left result. infixl 4.",
+  "ex": "Just 1 <* Just 2 == Just 1",
+  "prio": "useful",
+  "kind": "method",
+  "explain": "runs both, keeps the left result. `Just 1 <* Just 2 == Just 1`. `infixl 4`."
+ },
+ {
+  "id": "(>>=)",
+  "name": "(>>=)",
+  "sig": "Monad m => m a -> (a -> m b) -> m b",
+  "desc": "Bind: feed the result into a function choosing the next action. infixl 1.",
+  "ex": "Just 3 >>= (\\x -> Just (x*2)) == Just 6",
+  "prio": "core",
+  "kind": "method",
+  "explain": "bind. It takes the result of the first action and feeds it to a function that chooses the next action. `Just 3 >>= \\x -> Just (x * 2) == Just 6`; `Nothing >>= f == Nothing`. Every `do` block is turned into `>>=` calls. `infixl 1`."
+ },
+ {
+  "id": "(>>)",
+  "name": "(>>)",
+  "sig": "Monad m => m a -> m b -> m b",
+  "desc": "Sequence, discarding the first result. infixl 1.",
+  "ex": "putStr \"a\" >> putStr \"b\"",
+  "prio": "core",
+  "kind": "method",
+  "explain": "runs the first, ignores its result, runs the second. `putStr \"a\" >> putStr \"b\"`. `infixl 1`."
+ },
+ {
+  "id": "return",
+  "name": "return",
+  "sig": "Monad m => a -> m a",
+  "desc": "Same as `pure`. Does NOT exit the function.",
+  "ex": "return 5 :: Maybe Int == Just 5",
+  "prio": "core",
+  "kind": "method",
+  "explain": "identical to `pure`. Despite the name it does **not** exit the function; it only wraps a value."
+ },
+ {
+  "id": "fail",
+  "name": "fail",
+  "sig": "MonadFail m => String -> m a",
+  "desc": "Called on a failed pattern match in `do`. Maybe gives Nothing, list gives [], IO throws.",
+  "ex": "fail \"x\" :: Maybe Int == Nothing",
+  "prio": "useful",
+  "kind": "method",
+  "explain": "called automatically when a pattern on the left of `<-` in a `do` block does not match. For `Maybe` it gives `Nothing`, for lists `[]`, and in `IO` it throws an exception."
+ },
+ {
+  "id": "fold",
+  "name": "fold",
+  "sig": "(Foldable t, Monoid m) => t m -> m",
+  "desc": "Combine all elements with `<>`. Import `Data.Foldable`.",
+  "ex": "fold [\"ab\",\"cd\"] == \"abcd\"",
+  "prio": "useful",
+  "kind": "method",
+  "explain": "combines all elements with their Monoid. `fold [\"ab\", \"cd\"] == \"abcd\"`. Not exported from the Prelude; `import Data.Foldable (fold)`."
+ },
+ {
+  "id": "foldMap",
+  "name": "foldMap",
+  "sig": "(Foldable t, Monoid m) => (a -> m) -> t a -> m",
+  "desc": "Map each element to a Monoid and combine.",
+  "ex": "foldMap show [1,2,3] == \"123\"",
+  "prio": "core",
+  "kind": "method",
+  "explain": "turns each element into a Monoid value, then combines them. `foldMap show [1,2,3] == \"123\"`."
+ },
+ {
+  "id": "foldMap'",
+  "name": "foldMap'",
+  "sig": "(Foldable t, Monoid m) => (a -> m) -> t a -> m",
+  "desc": "Strict foldMap. Import `Data.Foldable`.",
+  "ex": "",
+  "prio": "rare",
+  "kind": "method",
+  "explain": "a strict version of `foldMap`. In `Data.Foldable`."
+ },
+ {
+  "id": "foldr",
+  "name": "foldr",
+  "sig": "Foldable t => (a -> b -> b) -> b -> t a -> b",
+  "desc": "Right fold: foldr f z [a,b,c] = f a (f b (f c z)). Can work on infinite lists.",
+  "ex": "foldr (:) [] [1,2] == [1,2]",
+  "prio": "core",
+  "kind": "method",
+  "explain": "right fold. `foldr f z [a,b,c] = f a (f b (f c z))`. It can work on infinite lists when `f` is lazy in its second argument."
+ },
+ {
+  "id": "foldr'",
+  "name": "foldr'",
+  "sig": "Foldable t => (a -> b -> b) -> b -> t a -> b",
+  "desc": "Strict right fold. Import `Data.Foldable`.",
+  "ex": "",
+  "prio": "rare",
+  "kind": "method",
+  "explain": "a strict right fold. In `Data.Foldable`."
+ },
+ {
+  "id": "foldl",
+  "name": "foldl",
+  "sig": "Foldable t => (b -> a -> b) -> b -> t a -> b",
+  "desc": "Left fold: foldl f z [a,b,c] = f (f (f z a) b) c. Builds thunks; prefer foldl'.",
+  "ex": "foldl (-) 10 [1,2] == 7",
+  "prio": "core",
+  "kind": "method",
+  "explain": "left fold. `foldl f z [a,b,c] = f (f (f z a) b) c`. It builds up unevaluated thunks; prefer `foldl'`."
+ },
+ {
+  "id": "foldl'",
+  "name": "foldl'",
+  "sig": "Foldable t => (b -> a -> b) -> b -> t a -> b",
+  "desc": "Strict left fold; constant space. In the Prelude since GHC 9.10.",
+  "ex": "foldl' (+) 0 [1..100] == 5050",
+  "prio": "core",
+  "kind": "method",
+  "explain": "the strict left fold. It forces the accumulator at each step, so it runs in constant space. `foldl' (+) 0 [1..1000000]`. It has been exported from the Prelude since GHC 9.10, which is why it is not qualified here."
+ },
+ {
+  "id": "foldr1",
+  "name": "foldr1",
+  "sig": "Foldable t => (a -> a -> a) -> t a -> a",
+  "desc": "Right fold seeded with the last element. Crashes on empty.",
+  "ex": "foldr1 (-) [10,3,2] == 9",
+  "prio": "useful",
+  "kind": "method",
+  "explain": "a right fold with no starting value; it uses the last element as the seed. Crashes on an empty container."
+ },
+ {
+  "id": "foldl1",
+  "name": "foldl1",
+  "sig": "Foldable t => (a -> a -> a) -> t a -> a",
+  "desc": "Left fold seeded with the first element. Crashes on empty.",
+  "ex": "foldl1 (-) [10,3,2] == 5",
+  "prio": "useful",
+  "kind": "method",
+  "explain": "a left fold that uses the first element as the seed. Crashes on an empty container."
+ },
+ {
+  "id": "toList",
+  "name": "toList",
+  "sig": "Foldable t => t a -> [a]",
+  "desc": "Convert to a list. Import `Data.Foldable`.",
+  "ex": "toList (Just 3) == [3]",
+  "prio": "useful",
+  "kind": "method",
+  "explain": "turns the container into a list. `toList (Just 3) == [3]`. In `Data.Foldable`."
+ },
+ {
+  "id": "null",
+  "name": "null",
+  "sig": "Foldable t => t a -> Bool",
+  "desc": "Is it empty?",
+  "ex": "null Nothing == True",
+  "prio": "core",
+  "kind": "method",
+  "explain": "is it empty? `null [] == True`, `null Nothing == True`."
+ },
+ {
+  "id": "length",
+  "name": "length",
+  "sig": "Foldable t => t a -> Int",
+  "desc": "Number of elements. Trap: length (1,2) == 1.",
+  "ex": "length [1,2,3] == 3",
+  "prio": "core",
+  "kind": "method",
+  "explain": "number of elements. Trap: `length (1, 2) == 1`, because a pair is Foldable over its second component only."
+ },
+ {
+  "id": "elem",
+  "name": "elem",
+  "sig": "(Foldable t, Eq a) => a -> t a -> Bool",
+  "desc": "Membership. infix 4.",
+  "ex": "elem 3 [1,2,3] == True",
+  "prio": "core",
+  "kind": "method",
+  "explain": "membership. `elem 3 [1,2,3] == True`. `infix 4`."
+ },
+ {
+  "id": "maximum",
+  "name": "maximum",
+  "sig": "(Foldable t, Ord a) => t a -> a",
+  "desc": "Largest element. Crashes on empty.",
+  "ex": "maximum [3,1,4] == 4",
+  "prio": "core",
+  "kind": "method",
+  "explain": "the largest element. Crashes on empty."
+ },
+ {
+  "id": "minimum",
+  "name": "minimum",
+  "sig": "(Foldable t, Ord a) => t a -> a",
+  "desc": "Smallest element. Crashes on empty.",
+  "ex": "minimum [3,1,4] == 1",
+  "prio": "core",
+  "kind": "method",
+  "explain": "the smallest element. Crashes on empty."
+ },
+ {
+  "id": "sum",
+  "name": "sum",
+  "sig": "(Foldable t, Num a) => t a -> a",
+  "desc": "Add all. sum [] == 0.",
+  "ex": "sum [1,2,3] == 6",
+  "prio": "core",
+  "kind": "method",
+  "explain": "adds all elements. `sum [] == 0`."
+ },
+ {
+  "id": "product",
+  "name": "product",
+  "sig": "(Foldable t, Num a) => t a -> a",
+  "desc": "Multiply all. product [] == 1.",
+  "ex": "product [1,2,3,4] == 24",
+  "prio": "core",
+  "kind": "method",
+  "explain": "multiplies all elements. `product [] == 1`."
+ },
+ {
+  "id": "traverse",
+  "name": "traverse",
+  "sig": "(Traversable t, Applicative f) => (a -> f b) -> t a -> f (t b)",
+  "desc": "Map an effectful function and collect the results.",
+  "ex": "traverse (\\x -> if x > 0 then Just x else Nothing) [1,2] == Just [1,2]",
+  "prio": "core",
+  "kind": "method",
+  "explain": "maps an effectful function over the container and collects the results. `traverse (\\x -> if x > 0 then Just x else Nothing) [1,2] == Just [1,2]`; a single `Nothing` makes the whole result `Nothing`."
+ },
+ {
+  "id": "sequenceA",
+  "name": "sequenceA",
+  "sig": "(Traversable t, Applicative f) => t (f a) -> f (t a)",
+  "desc": "Swap the layers.",
+  "ex": "sequenceA [[1,2],[3]] == [[1,3],[2,3]]",
+  "prio": "core",
+  "kind": "method",
+  "explain": "swaps the layers. `sequenceA [Just 1, Just 2] == Just [1,2]`; `sequenceA [[1,2],[3]] == [[1,3],[2,3]]`."
+ },
+ {
+  "id": "mapM",
+  "name": "mapM",
+  "sig": "(Traversable t, Monad m) => (a -> m b) -> t a -> m (t b)",
+  "desc": "traverse with a Monad constraint.",
+  "ex": "mapM Just [1,2] == Just [1,2]",
+  "prio": "core",
+  "kind": "method",
+  "explain": "`traverse` with a `Monad` constraint, kept for history. `mapM Just [1,2] == Just [1,2]`."
+ },
+ {
+  "id": "sequence",
+  "name": "sequence",
+  "sig": "(Traversable t, Monad m) => t (m a) -> m (t a)",
+  "desc": "sequenceA with a Monad constraint.",
+  "ex": "sequence [Just 1, Nothing] == Nothing",
+  "prio": "core",
+  "kind": "method",
+  "explain": "`sequenceA` with a `Monad` constraint. `sequence [Just 1, Nothing] == Nothing`."
+ },
+ {
+  "id": "(<>)",
+  "name": "(<>)",
+  "sig": "Semigroup a => a -> a -> a",
+  "desc": "Associative combine. infixr 6.",
+  "ex": "\"ab\" <> \"cd\" == \"abcd\"",
+  "prio": "core",
+  "kind": "method",
+  "explain": "combine. `\"ab\" <> \"cd\" == \"abcd\"`, `[1] <> [2] == [1,2]`. Must satisfy `(x <> y) <> z == x <> (y <> z)`. `infixr 6`."
+ },
+ {
+  "id": "sconcat",
+  "name": "sconcat",
+  "sig": "Semigroup a => NonEmpty a -> a",
+  "desc": "Combine a non-empty list. Import `Data.Semigroup`.",
+  "ex": "",
+  "prio": "rare",
+  "kind": "method",
+  "explain": "combines a non-empty list. Not exported from the Prelude; in `Data.Semigroup`."
+ },
+ {
+  "id": "stimes",
+  "name": "stimes",
+  "sig": "(Semigroup a, Integral b) => b -> a -> a",
+  "desc": "Combine a value with itself n times. Import `Data.Semigroup`.",
+  "ex": "stimes 3 \"ab\" == \"ababab\"",
+  "prio": "rare",
+  "kind": "method",
+  "explain": "combines a value with itself `n` times. `stimes 3 \"ab\" == \"ababab\"`. In `Data.Semigroup`."
+ },
+ {
+  "id": "mempty",
+  "name": "mempty",
+  "sig": "Monoid a => a",
+  "desc": "Identity element.",
+  "ex": "mempty :: String == \"\"",
+  "prio": "core",
+  "kind": "method",
+  "explain": "the identity element. `mempty :: String == \"\"`, `mempty :: [Int] == []`."
+ },
+ {
+  "id": "mappend",
+  "name": "mappend",
+  "sig": "Monoid a => a -> a -> a",
+  "desc": "Old name for `<>`.",
+  "ex": "mappend [1] [2] == [1,2]",
+  "prio": "useful",
+  "kind": "method",
+  "explain": "the old name for `<>`. Same behaviour."
+ },
+ {
+  "id": "mconcat",
+  "name": "mconcat",
+  "sig": "Monoid a => [a] -> a",
+  "desc": "Combine a whole list.",
+  "ex": "mconcat [\"a\",\"b\",\"c\"] == \"abc\"",
+  "prio": "core",
+  "kind": "method",
+  "explain": "combines a whole list. `mconcat [\"a\", \"b\", \"c\"] == \"abc\"`."
+ },
+ {
+  "id": "(==)",
+  "name": "(==)",
+  "sig": "Eq a => a -> a -> Bool",
+  "desc": "Equal. infix 4.",
+  "ex": "1 == 1",
+  "prio": "core",
+  "kind": "method",
+  "explain": "equal. `infix 4`."
+ },
+ {
+  "id": "(/=)",
+  "name": "(/=)",
+  "sig": "Eq a => a -> a -> Bool",
+  "desc": "Not equal (NOT `!=`). infix 4.",
+  "ex": "1 /= 2 == True",
+  "prio": "core",
+  "kind": "method",
+  "explain": "not equal. Haskell writes `/=`, not `!=`. `infix 4`."
+ },
+ {
+  "id": "compare",
+  "name": "compare",
+  "sig": "Ord a => a -> a -> Ordering",
+  "desc": "Returns LT, EQ or GT.",
+  "ex": "compare 1 2 == LT",
+  "prio": "core",
+  "kind": "method",
+  "explain": "returns `LT`, `EQ` or `GT`. `compare 1 2 == LT`."
+ },
+ {
+  "id": "(<)",
+  "name": "(<)",
+  "sig": "Ord a => a -> a -> Bool",
+  "desc": "Less than. infix 4.",
+  "ex": "1 < 2",
+  "prio": "core",
+  "kind": "method",
+  "explain": "less than. `infix 4`."
+ },
+ {
+  "id": "(<=)",
+  "name": "(<=)",
+  "sig": "Ord a => a -> a -> Bool",
+  "desc": "Less than or equal. infix 4.",
+  "ex": "2 <= 2",
+  "prio": "core",
+  "kind": "method",
+  "explain": "less than or equal. `infix 4`."
+ },
+ {
+  "id": "(>)",
+  "name": "(>)",
+  "sig": "Ord a => a -> a -> Bool",
+  "desc": "Greater than. infix 4.",
+  "ex": "3 > 2",
+  "prio": "core",
+  "kind": "method",
+  "explain": "greater than. `infix 4`."
+ },
+ {
+  "id": "(>=)",
+  "name": "(>=)",
+  "sig": "Ord a => a -> a -> Bool",
+  "desc": "Greater than or equal. infix 4.",
+  "ex": "3 >= 3",
+  "prio": "core",
+  "kind": "method",
+  "explain": "greater than or equal. `infix 4`."
+ },
+ {
+  "id": "max",
+  "name": "max",
+  "sig": "Ord a => a -> a -> a",
+  "desc": "The larger.",
+  "ex": "max 3 7 == 7",
+  "prio": "core",
+  "kind": "method",
+  "explain": "the larger. `max 3 7 == 7`."
+ },
+ {
+  "id": "min",
+  "name": "min",
+  "sig": "Ord a => a -> a -> a",
+  "desc": "The smaller.",
+  "ex": "min 3 7 == 3",
+  "prio": "core",
+  "kind": "method",
+  "explain": "the smaller. `min 3 7 == 3`."
+ },
+ {
+  "id": "minBound",
+  "name": "minBound",
+  "sig": "Bounded a => a",
+  "desc": "Smallest value.",
+  "ex": "minBound :: Bool == False",
+  "prio": "core",
+  "kind": "method",
+  "explain": "the smallest value. `minBound :: Int == -9223372036854775808`, `minBound :: Bool == False`."
+ },
+ {
+  "id": "maxBound",
+  "name": "maxBound",
+  "sig": "Bounded a => a",
+  "desc": "Largest value.",
+  "ex": "maxBound :: Int == 9223372036854775807",
+  "prio": "core",
+  "kind": "method",
+  "explain": "the largest value. `maxBound :: Int == 9223372036854775807`, `maxBound :: Char == '\\1114111'`."
+ },
+ {
+  "id": "succ",
+  "name": "succ",
+  "sig": "Enum a => a -> a",
+  "desc": "Next value. Crashes on maxBound.",
+  "ex": "succ 'a' == 'b'",
+  "prio": "core",
+  "kind": "method",
+  "explain": "the next value. `succ 'a' == 'b'`. Crashes on `maxBound` for bounded types."
+ },
+ {
+  "id": "pred",
+  "name": "pred",
+  "sig": "Enum a => a -> a",
+  "desc": "Previous value.",
+  "ex": "pred 10 == 9",
+  "prio": "core",
+  "kind": "method",
+  "explain": "the previous value. `pred 10 == 9`."
+ },
+ {
+  "id": "toEnum",
+  "name": "toEnum",
+  "sig": "Enum a => Int -> a",
+  "desc": "Int to value.",
+  "ex": "toEnum 65 :: Char == 'A'",
+  "prio": "core",
+  "kind": "method",
+  "explain": "an `Int` to a value. `toEnum 65 :: Char == 'A'`."
+ },
+ {
+  "id": "fromEnum",
+  "name": "fromEnum",
+  "sig": "Enum a => a -> Int",
+  "desc": "Value to Int.",
+  "ex": "fromEnum True == 1",
+  "prio": "core",
+  "kind": "method",
+  "explain": "a value to its `Int` position. `fromEnum 'A' == 65`, `fromEnum True == 1`."
+ },
+ {
+  "id": "enumFrom",
+  "name": "enumFrom",
+  "sig": "Enum a => a -> [a]",
+  "desc": "What [x ..] means.",
+  "ex": "take 3 (enumFrom 5) == [5,6,7]",
+  "prio": "useful",
+  "kind": "method",
+  "explain": "what `[x ..]` means. `[1 ..]` is infinite."
+ },
+ {
+  "id": "enumFromThen",
+  "name": "enumFromThen",
+  "sig": "Enum a => a -> a -> [a]",
+  "desc": "What [x, y ..] means.",
+  "ex": "take 3 (enumFromThen 1 3) == [1,3,5]",
+  "prio": "useful",
+  "kind": "method",
+  "explain": "what `[x, y ..]` means. `[1, 3 ..]` is all odd numbers."
+ },
+ {
+  "id": "enumFromTo",
+  "name": "enumFromTo",
+  "sig": "Enum a => a -> a -> [a]",
+  "desc": "What [x .. z] means.",
+  "ex": "enumFromTo 1 4 == [1,2,3,4]",
+  "prio": "useful",
+  "kind": "method",
+  "explain": "what `[x .. z]` means. `[1 .. 4] == [1,2,3,4]`."
+ },
+ {
+  "id": "enumFromThenTo",
+  "name": "enumFromThenTo",
+  "sig": "Enum a => a -> a -> a -> [a]",
+  "desc": "What [x, y .. z] means.",
+  "ex": "enumFromThenTo 1 3 10 == [1,3,5,7,9]",
+  "prio": "useful",
+  "kind": "method",
+  "explain": "what `[x, y .. z]` means. `[1, 3 .. 10] == [1,3,5,7,9]`."
+ },
+ {
+  "id": "showsPrec",
+  "name": "showsPrec",
+  "sig": "Show a => Int -> a -> ShowS",
+  "desc": "Precedence-aware show; adds parentheses when needed.",
+  "ex": "showsPrec 11 (-5) \"\" == \"(-5)\"",
+  "prio": "useful",
+  "kind": "method",
+  "explain": "precedence-aware showing; adds parentheses when the context needs them. This is why `show (Just (-3)) == \"Just (-3)\"`."
+ },
+ {
+  "id": "show",
+  "name": "show",
+  "sig": "Show a => a -> String",
+  "desc": "Convert to String.",
+  "ex": "show (Just (-3)) == \"Just (-3)\"",
+  "prio": "core",
+  "kind": "method",
+  "explain": "converts to a `String`. `show 42 == \"42\"`, `show \"hi\" == \"\\\"hi\\\"\"`."
+ },
+ {
+  "id": "showList",
+  "name": "showList",
+  "sig": "Show a => [a] -> ShowS",
+  "desc": "How a list of this type shows; Char overrides it so strings show as \"abc\".",
+  "ex": "",
+  "prio": "rare",
+  "kind": "method",
+  "explain": "how a list of this type is shown. `Char` overrides it so `show \"abc\"` gives `\"\\\"abc\\\"\"` instead of `\"['a','b','c']\"`."
+ },
+ {
+  "id": "readsPrec",
+  "name": "readsPrec",
+  "sig": "Read a => Int -> ReadS a",
+  "desc": "Precedence-aware old-style parser.",
+  "ex": "(readsPrec 0 \"5 x\" :: [(Int,String)]) == [(5,\" x\")]",
+  "prio": "rare",
+  "kind": "method",
+  "explain": "the old-style parser. The `Int` is the precedence of the surrounding context (0 to 11), which decides whether parentheses are needed. `(readsPrec 0 \"5 x\" :: [(Int, String)]) == [(5, \" x\")]`."
+ },
+ {
+  "id": "readList",
+  "name": "readList",
+  "sig": "Read a => ReadS [a]",
+  "desc": "How a list of this type parses.",
+  "ex": "",
+  "prio": "rare",
+  "kind": "method",
+  "explain": "how a list of this type is parsed. Exists so `String` can be read as `\"abc\"` rather than `['a','b','c']`."
+ },
+ {
+  "id": "readPrec",
+  "name": "readPrec",
+  "sig": "Read a => ReadPrec a",
+  "desc": "Newer parser interface. Import `Text.Read`.",
+  "ex": "",
+  "prio": "rare",
+  "kind": "method",
+  "explain": "the newer parser interface. Not exported from the Prelude; in `Text.Read`."
+ },
+ {
+  "id": "readListPrec",
+  "name": "readListPrec",
+  "sig": "Read a => ReadPrec [a]",
+  "desc": "Newer list parser. Import `Text.Read`.",
+  "ex": "",
+  "prio": "rare",
+  "kind": "method",
+  "explain": "the newer list parser. In `Text.Read`."
+ },
+ {
+  "id": "(+)",
+  "name": "(+)",
+  "sig": "Num a => a -> a -> a",
+  "desc": "Addition. infixl 6.",
+  "ex": "1 + 2 == 3",
+  "prio": "core",
+  "kind": "method",
+  "explain": "addition. `infixl 6`."
+ },
+ {
+  "id": "(-)",
+  "name": "(-)",
+  "sig": "Num a => a -> a -> a",
+  "desc": "Subtraction. infixl 6.",
+  "ex": "5 - 2 == 3",
+  "prio": "core",
+  "kind": "method",
+  "explain": "subtraction. `infixl 6`."
+ },
+ {
+  "id": "(*)",
+  "name": "(*)",
+  "sig": "Num a => a -> a -> a",
+  "desc": "Multiplication. infixl 7.",
+  "ex": "2 * 3 == 6",
+  "prio": "core",
+  "kind": "method",
+  "explain": "multiplication. `infixl 7`."
+ },
+ {
+  "id": "negate",
+  "name": "negate",
+  "sig": "Num a => a -> a",
+  "desc": "Negation; `-x` means `negate x`.",
+  "ex": "negate 3 == -3",
+  "prio": "core",
+  "kind": "method",
+  "explain": "negation. The syntax `-x` means `negate x`."
+ },
+ {
+  "id": "abs",
+  "name": "abs",
+  "sig": "Num a => a -> a",
+  "desc": "Absolute value.",
+  "ex": "abs (-3) == 3",
+  "prio": "core",
+  "kind": "method",
+  "explain": "absolute value. `abs (-3) == 3`."
+ },
+ {
+  "id": "signum",
+  "name": "signum",
+  "sig": "Num a => a -> a",
+  "desc": "Sign: -1, 0 or 1. abs x * signum x == x.",
+  "ex": "signum (-3) == -1",
+  "prio": "core",
+  "kind": "method",
+  "explain": "the sign: `-1`, `0` or `1`. The law is `abs x * signum x == x`."
+ },
+ {
+  "id": "fromInteger",
+  "name": "fromInteger",
+  "sig": "Num a => Integer -> a",
+  "desc": "How integer literals work: `5` means `fromInteger 5`.",
+  "ex": "fromInteger 3 :: Double == 3.0",
+  "prio": "core",
+  "kind": "method",
+  "explain": "how integer literals work. Writing `5` really means `fromInteger 5`, which is why `5` can be an `Int`, a `Double`, or an `Expr`."
+ },
+ {
+  "id": "toRational",
+  "name": "toRational",
+  "sig": "Real a => a -> Rational",
+  "desc": "Exact conversion to a fraction.",
+  "ex": "toRational 0.75 == 3 % 4",
+  "prio": "useful",
+  "kind": "method",
+  "explain": "exact conversion. `toRational 0.75 == 3 % 4`."
+ },
+ {
+  "id": "quot",
+  "name": "quot",
+  "sig": "Integral a => a -> a -> a",
+  "desc": "Division rounding toward zero.",
+  "ex": "quot (-7) 2 == -3",
+  "prio": "core",
+  "kind": "method",
+  "explain": "division rounding **toward zero**. `quot (-7) 2 == -3`."
+ },
+ {
+  "id": "rem",
+  "name": "rem",
+  "sig": "Integral a => a -> a -> a",
+  "desc": "Remainder for quot; sign follows the dividend.",
+  "ex": "rem (-7) 2 == -1",
+  "prio": "core",
+  "kind": "method",
+  "explain": "the remainder that goes with `quot`; its sign follows the **dividend**. `rem (-7) 2 == -1`."
+ },
+ {
+  "id": "div",
+  "name": "div",
+  "sig": "Integral a => a -> a -> a",
+  "desc": "Division rounding down (toward minus infinity).",
+  "ex": "div (-7) 2 == -4",
+  "prio": "core",
+  "kind": "method",
+  "explain": "division rounding **down** (toward minus infinity). `div (-7) 2 == -4`."
+ },
+ {
+  "id": "mod",
+  "name": "mod",
+  "sig": "Integral a => a -> a -> a",
+  "desc": "Remainder for div; sign follows the divisor.",
+  "ex": "mod (-7) 2 == 1",
+  "prio": "core",
+  "kind": "method",
+  "explain": "the remainder that goes with `div`; its sign follows the **divisor**. `mod (-7) 2 == 1`. The law is `div x y * y + mod x y == x`."
+ },
+ {
+  "id": "quotRem",
+  "name": "quotRem",
+  "sig": "Integral a => a -> a -> (a, a)",
+  "desc": "Both quot and rem.",
+  "ex": "quotRem (-7) 2 == (-3,-1)",
+  "prio": "core",
+  "kind": "method",
+  "explain": "both at once. `quotRem (-7) 2 == (-3, -1)`."
+ },
+ {
+  "id": "divMod",
+  "name": "divMod",
+  "sig": "Integral a => a -> a -> (a, a)",
+  "desc": "Both div and mod.",
+  "ex": "divMod (-7) 2 == (-4,1)",
+  "prio": "core",
+  "kind": "method",
+  "explain": "both at once. `divMod (-7) 2 == (-4, 1)`."
+ },
+ {
+  "id": "toInteger",
+  "name": "toInteger",
+  "sig": "Integral a => a -> Integer",
+  "desc": "Convert to Integer.",
+  "ex": "toInteger (5 :: Int) == 5",
+  "prio": "core",
+  "kind": "method",
+  "explain": "converts to `Integer`."
+ },
+ {
+  "id": "(/)",
+  "name": "(/)",
+  "sig": "Fractional a => a -> a -> a",
+  "desc": "Division; not for Int (use div). infixl 7.",
+  "ex": "7 / 2 == 3.5",
+  "prio": "core",
+  "kind": "method",
+  "explain": "division. `7 / 2 == 3.5`. It does not work on `Int`; use `div` there. `infixl 7`."
+ },
+ {
+  "id": "recip",
+  "name": "recip",
+  "sig": "Fractional a => a -> a",
+  "desc": "1 / x.",
+  "ex": "recip 4 == 0.25",
+  "prio": "useful",
+  "kind": "method",
+  "explain": "reciprocal, `1 / x`. `recip 4 == 0.25`."
+ },
+ {
+  "id": "fromRational",
+  "name": "fromRational",
+  "sig": "Fractional a => Rational -> a",
+  "desc": "How decimal literals work: `3.5` means `fromRational (7 % 2)`.",
+  "ex": "fromRational (1 % 4) :: Double == 0.25",
+  "prio": "core",
+  "kind": "method",
+  "explain": "how decimal literals work. Writing `3.5` really means `fromRational (7 % 2)`, which is why `3.5` can be a `Double`, a `Float`, or your own `Expr`."
+ },
+ {
+  "id": "pi",
+  "name": "pi",
+  "sig": "Floating a => a",
+  "desc": "Pi.",
+  "ex": "pi :: Double == 3.141592653589793",
+  "prio": "core",
+  "kind": "method",
+  "explain": "π. `pi :: Double == 3.141592653589793`."
+ },
+ {
+  "id": "exp",
+  "name": "exp",
+  "sig": "Floating a => a -> a",
+  "desc": "e to the power x.",
+  "ex": "exp 1 == 2.718281828459045",
+  "prio": "core",
+  "kind": "method",
+  "explain": "\\(e^x\\). `exp 1 == 2.718281828459045`."
+ },
+ {
+  "id": "log",
+  "name": "log",
+  "sig": "Floating a => a -> a",
+  "desc": "Natural logarithm.",
+  "ex": "log (exp 2) == 2.0",
+  "prio": "core",
+  "kind": "method",
+  "explain": "natural logarithm (base \\(e\\)). `log (exp 2) == 2.0`."
+ },
+ {
+  "id": "sqrt",
+  "name": "sqrt",
+  "sig": "Floating a => a -> a",
+  "desc": "Square root.",
+  "ex": "sqrt 16 == 4.0",
+  "prio": "core",
+  "kind": "method",
+  "explain": "square root. `sqrt 16 == 4.0`."
+ },
+ {
+  "id": "(**)",
+  "name": "(**)",
+  "sig": "Floating a => a -> a -> a",
+  "desc": "Power with a floating exponent. infixr 8.",
+  "ex": "2 ** 0.5 == 1.4142135623730951",
+  "prio": "core",
+  "kind": "method",
+  "explain": "power where the exponent is also floating. `2 ** 0.5 == 1.4142135623730951`. `infixr 8`."
+ },
+ {
+  "id": "logBase",
+  "name": "logBase",
+  "sig": "Floating a => a -> a -> a",
+  "desc": "Logarithm; BASE FIRST.",
+  "ex": "logBase 2 8 == 3.0",
+  "prio": "core",
+  "kind": "method",
+  "explain": "logarithm with a chosen base; the **base comes first**. `logBase 2 8 == 3.0`."
+ },
+ {
+  "id": "sin",
+  "name": "sin",
+  "sig": "Floating a => a -> a",
+  "desc": "Sine (radians).",
+  "ex": "sin (pi / 2) == 1.0",
+  "prio": "core",
+  "kind": "method",
+  "explain": "sine, in radians. `sin (pi / 2) == 1.0`."
+ },
+ {
+  "id": "cos",
+  "name": "cos",
+  "sig": "Floating a => a -> a",
+  "desc": "Cosine (radians).",
+  "ex": "cos 0 == 1.0",
+  "prio": "core",
+  "kind": "method",
+  "explain": "cosine, in radians. `cos 0 == 1.0`."
+ },
+ {
+  "id": "tan",
+  "name": "tan",
+  "sig": "Floating a => a -> a",
+  "desc": "Tangent (radians).",
+  "ex": "tan 0 == 0.0",
+  "prio": "useful",
+  "kind": "method",
+  "explain": "tangent, in radians. `tan 0 == 0.0`."
+ },
+ {
+  "id": "asin",
+  "name": "asin",
+  "sig": "Floating a => a -> a",
+  "desc": "Inverse sine.",
+  "ex": "asin 1 == 1.5707963267948966",
+  "prio": "useful",
+  "kind": "method",
+  "explain": "inverse sine. `asin 1 == 1.5707963267948966` (that is π/2)."
+ },
+ {
+  "id": "acos",
+  "name": "acos",
+  "sig": "Floating a => a -> a",
+  "desc": "Inverse cosine.",
+  "ex": "acos 1 == 0.0",
+  "prio": "useful",
+  "kind": "method",
+  "explain": "inverse cosine. `acos 1 == 0.0`."
+ },
+ {
+  "id": "atan",
+  "name": "atan",
+  "sig": "Floating a => a -> a",
+  "desc": "Inverse tangent.",
+  "ex": "atan 1 == 0.7853981633974483",
+  "prio": "useful",
+  "kind": "method",
+  "explain": "inverse tangent. `atan 1 == 0.7853981633974483` (π/4)."
+ },
+ {
+  "id": "sinh",
+  "name": "sinh",
+  "sig": "Floating a => a -> a",
+  "desc": "Hyperbolic sine.",
+  "ex": "sinh 0 == 0.0",
+  "prio": "rare",
+  "kind": "method",
+  "explain": "hyperbolic sine. `sinh 0 == 0.0`."
+ },
+ {
+  "id": "cosh",
+  "name": "cosh",
+  "sig": "Floating a => a -> a",
+  "desc": "Hyperbolic cosine.",
+  "ex": "cosh 0 == 1.0",
+  "prio": "rare",
+  "kind": "method",
+  "explain": "hyperbolic cosine. `cosh 0 == 1.0`."
+ },
+ {
+  "id": "tanh",
+  "name": "tanh",
+  "sig": "Floating a => a -> a",
+  "desc": "Hyperbolic tangent.",
+  "ex": "tanh 0 == 0.0",
+  "prio": "rare",
+  "kind": "method",
+  "explain": "hyperbolic tangent. `tanh 0 == 0.0`."
+ },
+ {
+  "id": "asinh",
+  "name": "asinh",
+  "sig": "Floating a => a -> a",
+  "desc": "Inverse hyperbolic sine.",
+  "ex": "asinh 0 == 0.0",
+  "prio": "rare",
+  "kind": "method",
+  "explain": "inverse hyperbolic sine. `asinh 0 == 0.0`."
+ },
+ {
+  "id": "acosh",
+  "name": "acosh",
+  "sig": "Floating a => a -> a",
+  "desc": "Inverse hyperbolic cosine.",
+  "ex": "acosh 1 == 0.0",
+  "prio": "rare",
+  "kind": "method",
+  "explain": "inverse hyperbolic cosine. `acosh 1 == 0.0`."
+ },
+ {
+  "id": "atanh",
+  "name": "atanh",
+  "sig": "Floating a => a -> a",
+  "desc": "Inverse hyperbolic tangent.",
+  "ex": "atanh 0 == 0.0",
+  "prio": "rare",
+  "kind": "method",
+  "explain": "inverse hyperbolic tangent. `atanh 0 == 0.0`."
+ },
+ {
+  "id": "log1p",
+  "name": "log1p",
+  "sig": "Floating a => a -> a",
+  "desc": "log (1 + x), accurate for tiny x. Import `Numeric`.",
+  "ex": "",
+  "prio": "rare",
+  "kind": "method",
+  "explain": "computes `log (1 + x)` accurately when `x` is tiny. Qualified because the Prelude does not export it; use `import Numeric (log1p)`."
+ },
+ {
+  "id": "expm1",
+  "name": "expm1",
+  "sig": "Floating a => a -> a",
+  "desc": "exp x - 1, accurate for tiny x. Import `Numeric`.",
+  "ex": "",
+  "prio": "rare",
+  "kind": "method",
+  "explain": "computes `exp x - 1` accurately when `x` is tiny. In `Numeric`."
+ },
+ {
+  "id": "log1pexp",
+  "name": "log1pexp",
+  "sig": "Floating a => a -> a",
+  "desc": "log (1 + exp x) without overflow. Import `Numeric`.",
+  "ex": "",
+  "prio": "rare",
+  "kind": "method",
+  "explain": "computes `log (1 + exp x)` without overflow. In `Numeric`."
+ },
+ {
+  "id": "log1mexp",
+  "name": "log1mexp",
+  "sig": "Floating a => a -> a",
+  "desc": "log (1 - exp x), accurate. Import `Numeric`.",
+  "ex": "",
+  "prio": "rare",
+  "kind": "method",
+  "explain": "computes `log (1 - exp x)` accurately. In `Numeric`."
+ },
+ {
+  "id": "properFraction",
+  "name": "properFraction",
+  "sig": "(RealFrac a, Integral b) => a -> (b, a)",
+  "desc": "Whole part and fractional part, same sign.",
+  "ex": "properFraction (-3.75) == (-3,-0.75)",
+  "prio": "useful",
+  "kind": "method",
+  "explain": "splits into whole part and fractional part, both with the same sign. `properFraction 3.75 == (3, 0.75)`, `properFraction (-3.75) == (-3, -0.75)`."
+ },
+ {
+  "id": "truncate",
+  "name": "truncate",
+  "sig": "(RealFrac a, Integral b) => a -> b",
+  "desc": "Round toward zero.",
+  "ex": "truncate (-2.7) == -2",
+  "prio": "core",
+  "kind": "method",
+  "explain": "rounds toward zero. `truncate (-2.7) == -2`."
+ },
+ {
+  "id": "round",
+  "name": "round",
+  "sig": "(RealFrac a, Integral b) => a -> b",
+  "desc": "Nearest; TIES GO TO EVEN.",
+  "ex": "round 2.5 == 2",
+  "prio": "core",
+  "kind": "method",
+  "explain": "rounds to the nearest whole number, and **ties go to the even neighbour** (banker's rounding). `round 2.5 == 2`, `round 3.5 == 4`, `round (-2.5) == -2`."
+ },
+ {
+  "id": "ceiling",
+  "name": "ceiling",
+  "sig": "(RealFrac a, Integral b) => a -> b",
+  "desc": "Round up.",
+  "ex": "ceiling 2.1 == 3",
+  "prio": "core",
+  "kind": "method",
+  "explain": "rounds up. `ceiling 2.1 == 3`."
+ },
+ {
+  "id": "floor",
+  "name": "floor",
+  "sig": "(RealFrac a, Integral b) => a -> b",
+  "desc": "Round down.",
+  "ex": "floor (-2.1) == -3",
+  "prio": "core",
+  "kind": "method",
+  "explain": "rounds down. `floor (-2.1) == -3`."
+ },
+ {
+  "id": "floatRadix",
+  "name": "floatRadix",
+  "sig": "RealFloat a => a -> Integer",
+  "desc": "Base of the representation.",
+  "ex": "floatRadix (1 :: Double) == 2",
+  "prio": "rare",
+  "kind": "method",
+  "explain": "the base of the representation. `2` for `Double`."
+ },
+ {
+  "id": "floatDigits",
+  "name": "floatDigits",
+  "sig": "RealFloat a => a -> Int",
+  "desc": "Mantissa digits: 53 for Double, 24 for Float.",
+  "ex": "floatDigits (1 :: Double) == 53",
+  "prio": "rare",
+  "kind": "method",
+  "explain": "digits in the mantissa. `53` for `Double`, `24` for `Float`."
+ },
+ {
+  "id": "floatRange",
+  "name": "floatRange",
+  "sig": "RealFloat a => a -> (Int, Int)",
+  "desc": "Exponent range.",
+  "ex": "floatRange (1 :: Double) == (-1021,1024)",
+  "prio": "rare",
+  "kind": "method",
+  "explain": "lowest and highest exponent. `(-1021, 1024)` for `Double`."
+ },
+ {
+  "id": "decodeFloat",
+  "name": "decodeFloat",
+  "sig": "RealFloat a => a -> (Integer, Int)",
+  "desc": "Mantissa m and exponent e with x == m * 2^e.",
+  "ex": "decodeFloat 1.0 == (4503599627370496,-52)",
+  "prio": "rare",
+  "kind": "method",
+  "explain": "splits into mantissa `m` and exponent `e` so that `x == m * 2^e`. `decodeFloat 1.0 == (4503599627370496, -52)`."
+ },
+ {
+  "id": "encodeFloat",
+  "name": "encodeFloat",
+  "sig": "RealFloat a => Integer -> Int -> a",
+  "desc": "Inverse of decodeFloat: m * 2^e.",
+  "ex": "encodeFloat 1 10 == 1024.0",
+  "prio": "rare",
+  "kind": "method",
+  "explain": "the inverse. `encodeFloat 1 10 == 1024.0`."
+ },
+ {
+  "id": "exponent",
+  "name": "exponent",
+  "sig": "RealFloat a => a -> Int",
+  "desc": "Exponent with mantissa scaled into [0.5, 1).",
+  "ex": "exponent 8.0 == 4",
+  "prio": "rare",
+  "kind": "method",
+  "explain": "the exponent when the mantissa is scaled into [0.5, 1). `exponent 8.0 == 4`, because `8 = 0.5 * 2^4`."
+ },
+ {
+  "id": "significand",
+  "name": "significand",
+  "sig": "RealFloat a => a -> a",
+  "desc": "Mantissa scaled into [0.5, 1).",
+  "ex": "significand 8.0 == 0.5",
+  "prio": "rare",
+  "kind": "method",
+  "explain": "that scaled mantissa. `significand 8.0 == 0.5`."
+ },
+ {
+  "id": "scaleFloat",
+  "name": "scaleFloat",
+  "sig": "RealFloat a => Int -> a -> a",
+  "desc": "Multiply by 2^n.",
+  "ex": "scaleFloat 3 1.0 == 8.0",
+  "prio": "rare",
+  "kind": "method",
+  "explain": "multiplies by `2^n` cheaply. `scaleFloat 3 1.0 == 8.0`."
+ },
+ {
+  "id": "isNaN",
+  "name": "isNaN",
+  "sig": "RealFloat a => a -> Bool",
+  "desc": "Not a number? NaN is not equal to itself.",
+  "ex": "isNaN (0 / 0) == True",
+  "prio": "useful",
+  "kind": "method",
+  "explain": "is it \"not a number\"? `isNaN (0 / 0) == True`. NaN is not equal to itself, so `x == x` is False for NaN."
+ },
+ {
+  "id": "isInfinite",
+  "name": "isInfinite",
+  "sig": "RealFloat a => a -> Bool",
+  "desc": "Infinite?",
+  "ex": "isInfinite (1 / 0) == True",
+  "prio": "useful",
+  "kind": "method",
+  "explain": "`isInfinite (1 / 0) == True`."
+ },
+ {
+  "id": "isDenormalized",
+  "name": "isDenormalized",
+  "sig": "RealFloat a => a -> Bool",
+  "desc": "Subnormal (tiny, reduced precision)?",
+  "ex": "",
+  "prio": "rare",
+  "kind": "method",
+  "explain": "is it a subnormal number (extremely close to zero, with reduced precision)?"
+ },
+ {
+  "id": "isNegativeZero",
+  "name": "isNegativeZero",
+  "sig": "RealFloat a => a -> Bool",
+  "desc": "Is it -0.0? (-0.0 == 0.0 is still True.)",
+  "ex": "isNegativeZero (-0.0) == True",
+  "prio": "rare",
+  "kind": "method",
+  "explain": "`isNegativeZero (-0.0) == True`, even though `-0.0 == 0.0` is True."
+ },
+ {
+  "id": "isIEEE",
+  "name": "isIEEE",
+  "sig": "RealFloat a => a -> Bool",
+  "desc": "Follows IEEE 754? True for Float and Double.",
+  "ex": "",
+  "prio": "rare",
+  "kind": "method",
+  "explain": "does the type follow the IEEE 754 standard? True for `Float` and `Double`."
+ },
+ {
+  "id": "atan2",
+  "name": "atan2",
+  "sig": "RealFloat a => a -> a -> a",
+  "desc": "Angle of point (x, y); Y FIRST; quadrant-correct.",
+  "ex": "atan2 1 (-1) == 2.356194490192345",
+  "prio": "useful",
+  "kind": "method",
+  "explain": "the angle of the point (x, y) from the positive x-axis, correct in all four quadrants. Note the order: **y first**. `atan2 1 (-1) == 2.356194490192345` (3π/4)."
+ },
+ {
+  "id": "(!!)",
+  "name": "(!!)",
+  "sig": "HasCallStack => [a] -> Int -> a",
+  "desc": "Index from 0, O(n); crashes out of range. infixl 9.",
+  "ex": "[10,20,30] !! 1 == 20",
+  "prio": "core",
+  "kind": "function",
+  "explain": "list indexing, starting at 0. `[10,20,30] !! 1 == 20`. It walks the list, so it costs O(n). It crashes on a negative or too-large index. `infixl 9`."
+ },
+ {
+  "id": "($)",
+  "name": "($)",
+  "sig": "(a -> b) -> a -> b",
+  "desc": "Application with lowest precedence (infixr 0); removes parentheses.",
+  "ex": "negate $ 2 + 3 == -5",
+  "prio": "core",
+  "kind": "function",
+  "explain": "plain function application with the lowest possible precedence (`infixr 0`). It exists to remove parentheses: `negate $ 2 + 3` means `negate (2 + 3)`. It can also be passed as a function: `map ($ 3) [(+1), (*2)] == [4,6]`."
+ },
+ {
+  "id": "($!)",
+  "name": "($!)",
+  "sig": "(a -> b) -> a -> b",
+  "desc": "Strict application: forces the argument to WHNF first. infixr 0.",
+  "ex": "",
+  "prio": "useful",
+  "kind": "function",
+  "explain": "strict application. It evaluates the argument to WHNF *before* calling the function. Used to stop unevaluated thunks piling up in accumulators. `infixr 0`."
+ },
+ {
+  "id": "(&&)",
+  "name": "(&&)",
+  "sig": "Bool -> Bool -> Bool",
+  "desc": "AND, lazy in the second argument. infixr 3.",
+  "ex": "False && undefined == False",
+  "prio": "core",
+  "kind": "function",
+  "explain": "logical AND. It is lazy in its second argument, so `False && undefined == False`. `infixr 3`."
+ },
+ {
+  "id": "(||)",
+  "name": "(||)",
+  "sig": "Bool -> Bool -> Bool",
+  "desc": "OR, lazy in the second argument. infixr 2.",
+  "ex": "True || undefined == True",
+  "prio": "core",
+  "kind": "function",
+  "explain": "logical OR, lazy in its second argument. `True || undefined == True`. `infixr 2`."
+ },
+ {
+  "id": "(++)",
+  "name": "(++)",
+  "sig": "[a] -> [a] -> [a]",
+  "desc": "Append; O(length of left list). infixr 5.",
+  "ex": "[1,2] ++ [3] == [1,2,3]",
+  "prio": "core",
+  "kind": "function",
+  "explain": "appends two lists. `[1,2] ++ [3] == [1,2,3]`. It copies the left list, so it costs O(length of the left list). `infixr 5`."
+ },
+ {
+  "id": "(.)",
+  "name": "(.)",
+  "sig": "(b -> c) -> (a -> b) -> a -> c",
+  "desc": "Composition; right-hand function runs first. infixr 9.",
+  "ex": "(show . (+1)) 2 == \"3\"",
+  "prio": "core",
+  "kind": "function",
+  "explain": "function composition. `(f . g) x = f (g x)`; the right-hand function runs first. `infixr 9`."
+ },
+ {
+  "id": "(<$>)",
+  "name": "(<$>)",
+  "sig": "Functor f => (a -> b) -> f a -> f b",
+  "desc": "Infix fmap. infixl 4.",
+  "ex": "(+1) <$> Just 2 == Just 3",
+  "prio": "core",
+  "kind": "function",
+  "explain": "infix `fmap`. `(+1) <$> Just 2 == Just 3`. `infixl 4`."
+ },
+ {
+  "id": "(=<<)",
+  "name": "(=<<)",
+  "sig": "Monad m => (a -> m b) -> m a -> m b",
+  "desc": "Flipped bind. infixr 1.",
+  "ex": "print =<< getLine",
+  "prio": "useful",
+  "kind": "function",
+  "explain": "bind with the arguments flipped. `f =<< m` is `m >>= f`. Example: `print =<< getLine`. `infixr 1`."
+ },
+ {
+  "id": "(^)",
+  "name": "(^)",
+  "sig": "(Num a, Integral b) => a -> b -> a",
+  "desc": "Power, non-negative integral exponent. infixr 8.",
+  "ex": "2 ^ 10 == 1024",
+  "prio": "core",
+  "kind": "function",
+  "explain": "power with a non-negative whole-number exponent. `2 ^ 10 == 1024`. A negative exponent is a runtime error. `infixr 8`."
+ },
+ {
+  "id": "(^^)",
+  "name": "(^^)",
+  "sig": "(Fractional a, Integral b) => a -> b -> a",
+  "desc": "Power, integral exponent may be negative. infixr 8.",
+  "ex": "2 ^^ (-1) == 0.5",
+  "prio": "core",
+  "kind": "function",
+  "explain": "power with any whole-number exponent, including negative; the base must be fractional. `2 ^^ (-1) == 0.5`. `infixr 8`."
+ },
+ {
+  "id": "all",
+  "name": "all",
+  "sig": "Foldable t => (a -> Bool) -> t a -> Bool",
+  "desc": "Every element passes? all p [] == True.",
+  "ex": "all even [2,4] == True",
+  "prio": "core",
+  "kind": "function",
+  "explain": "does every element satisfy the test? `all even [2,4] == True`; `all p [] == True`."
+ },
+ {
+  "id": "and",
+  "name": "and",
+  "sig": "Foldable t => t Bool -> Bool",
+  "desc": "All True? and [] == True.",
+  "ex": "and [True,False] == False",
+  "prio": "core",
+  "kind": "function",
+  "explain": "are all of them True? `and [True, False] == False`; `and [] == True`."
+ },
+ {
+  "id": "any",
+  "name": "any",
+  "sig": "Foldable t => (a -> Bool) -> t a -> Bool",
+  "desc": "Some element passes? any p [] == False.",
+  "ex": "any odd [2,3] == True",
+  "prio": "core",
+  "kind": "function",
+  "explain": "does at least one element satisfy the test? `any odd [2,3] == True`; `any p [] == False`."
+ },
+ {
+  "id": "or",
+  "name": "or",
+  "sig": "Foldable t => t Bool -> Bool",
+  "desc": "Any True? or [] == False.",
+  "ex": "or [False,True] == True",
+  "prio": "core",
+  "kind": "function",
+  "explain": "is any of them True? `or [False, True] == True`; `or [] == False`."
+ },
+ {
+  "id": "appendFile",
+  "name": "appendFile",
+  "sig": "FilePath -> String -> IO ()",
+  "desc": "Append text to a file (creates it if missing).",
+  "ex": "appendFile \"log.txt\" \"hi\\n\"",
+  "prio": "useful",
+  "kind": "function",
+  "explain": "adds text to the end of a file, creating it if needed."
+ },
+ {
+  "id": "asTypeOf",
+  "name": "asTypeOf",
+  "sig": "a -> a -> a",
+  "desc": "Returns the first argument; forces it to the second's type.",
+  "ex": "",
+  "prio": "rare",
+  "kind": "function",
+  "explain": "returns the first argument, but forces it to have the same type as the second. ``read \"5\" `asTypeOf` (0 :: Int)`` reads an `Int`."
+ },
+ {
+  "id": "break",
+  "name": "break",
+  "sig": "(a -> Bool) -> [a] -> ([a], [a])",
+  "desc": "Split at the FIRST element that passes.",
+  "ex": "break (> 3) [1,2,4,1] == ([1,2],[4,1])",
+  "prio": "core",
+  "kind": "function",
+  "explain": "splits the list at the **first** element that passes the test. `break (> 3) [1,2,4,1] == ([1,2],[4,1])`."
+ },
+ {
+  "id": "span",
+  "name": "span",
+  "sig": "(a -> Bool) -> [a] -> ([a], [a])",
+  "desc": "Longest prefix that passes, and the rest. span p == break (not . p).",
+  "ex": "span even [2,4,5,6] == ([2,4],[5,6])",
+  "prio": "core",
+  "kind": "function",
+  "explain": "splits off the longest prefix that passes the test. `span even [2,4,5,6] == ([2,4],[5,6])`. `span p` is the same as `break (not . p)`."
+ },
+ {
+  "id": "concat",
+  "name": "concat",
+  "sig": "Foldable t => t [a] -> [a]",
+  "desc": "Flatten one level.",
+  "ex": "concat [[1],[2,3]] == [1,2,3]",
+  "prio": "core",
+  "kind": "function",
+  "explain": "flattens one level. `concat [[1],[2,3]] == [1,2,3]`."
+ },
+ {
+  "id": "concatMap",
+  "name": "concatMap",
+  "sig": "Foldable t => (a -> [b]) -> t a -> [b]",
+  "desc": "Map then concat.",
+  "ex": "concatMap (replicate 2) \"ab\" == \"aabb\"",
+  "prio": "core",
+  "kind": "function",
+  "explain": "map, then concat. `concatMap (replicate 2) \"ab\" == \"aabb\"`."
+ },
+ {
+  "id": "const",
+  "name": "const",
+  "sig": "a -> b -> a",
+  "desc": "Ignore the second argument.",
+  "ex": "const 1 'x' == 1",
+  "prio": "core",
+  "kind": "function",
+  "explain": "ignores its second argument. `const 1 'x' == 1`. Handy as `map (const 0) xs`."
+ },
+ {
+  "id": "curry",
+  "name": "curry",
+  "sig": "((a, b) -> c) -> a -> b -> c",
+  "desc": "Pair function to two-argument function.",
+  "ex": "curry fst 1 2 == 1",
+  "prio": "useful",
+  "kind": "function",
+  "explain": "turns a function on pairs into a two-argument function. `curry fst 1 2 == 1`."
+ },
+ {
+  "id": "uncurry",
+  "name": "uncurry",
+  "sig": "(a -> b -> c) -> (a, b) -> c",
+  "desc": "Two-argument function to pair function.",
+  "ex": "uncurry (+) (1,2) == 3",
+  "prio": "core",
+  "kind": "function",
+  "explain": "turns a two-argument function into a function on pairs. `uncurry (+) (1,2) == 3`."
+ },
+ {
+  "id": "cycle",
+  "name": "cycle",
+  "sig": "HasCallStack => [a] -> [a]",
+  "desc": "Repeat a list forever; crashes on [].",
+  "ex": "take 5 (cycle [1,2]) == [1,2,1,2,1]",
+  "prio": "useful",
+  "kind": "function",
+  "explain": "repeats a list forever. `take 5 (cycle [1,2]) == [1,2,1,2,1]`. Crashes on `[]`."
+ },
+ {
+  "id": "drop",
+  "name": "drop",
+  "sig": "Int -> [a] -> [a]",
+  "desc": "Remove the first n; never crashes.",
+  "ex": "drop 2 [1,2,3] == [3]",
+  "prio": "core",
+  "kind": "function",
+  "explain": "removes the first `n` elements. `drop 2 [1,2,3] == [3]`. Never crashes: `drop 5 [1] == []`, and a negative `n` drops nothing."
+ },
+ {
+  "id": "take",
+  "name": "take",
+  "sig": "Int -> [a] -> [a]",
+  "desc": "Keep the first n; never crashes.",
+  "ex": "take 5 [1] == [1]",
+  "prio": "core",
+  "kind": "function",
+  "explain": "the first `n` elements. `take 2 [1,2,3] == [1,2]`; `take 5 [1] == [1]`. Never crashes."
+ },
+ {
+  "id": "dropWhile",
+  "name": "dropWhile",
+  "sig": "(a -> Bool) -> [a] -> [a]",
+  "desc": "Drop from the front while the test passes.",
+  "ex": "dropWhile (< 3) [1,2,3,1] == [3,1]",
+  "prio": "core",
+  "kind": "function",
+  "explain": "removes elements from the front while the test passes. `dropWhile (< 3) [1,2,3,1] == [3,1]`."
+ },
+ {
+  "id": "takeWhile",
+  "name": "takeWhile",
+  "sig": "(a -> Bool) -> [a] -> [a]",
+  "desc": "Keep from the front while the test passes.",
+  "ex": "takeWhile (< 3) [1,2,3,1] == [1,2]",
+  "prio": "core",
+  "kind": "function",
+  "explain": "elements from the front while the test passes. `takeWhile (< 3) [1,2,3,1] == [1,2]`."
+ },
+ {
+  "id": "filter",
+  "name": "filter",
+  "sig": "(a -> Bool) -> [a] -> [a]",
+  "desc": "Keep every element that passes.",
+  "ex": "filter even [1..6] == [2,4,6]",
+  "prio": "core",
+  "kind": "function",
+  "explain": "keeps the elements that pass the test. `filter even [1..6] == [2,4,6]`."
+ },
+ {
+  "id": "either",
+  "name": "either",
+  "sig": "(a -> c) -> (b -> c) -> Either a b -> c",
+  "desc": "Handle both cases of Either.",
+  "ex": "either length negate (Left \"abc\") == 3",
+  "prio": "core",
+  "kind": "function",
+  "explain": "handles both cases of an `Either`. `either length negate (Left \"abc\") == 3`, `either length negate (Right 4) == -4`."
+ },
+ {
+  "id": "maybe",
+  "name": "maybe",
+  "sig": "b -> (a -> b) -> Maybe a -> b",
+  "desc": "Default for Nothing, function for Just.",
+  "ex": "maybe 0 (+1) (Just 5) == 6",
+  "prio": "core",
+  "kind": "function",
+  "explain": "handles both cases of a `Maybe`: a default for `Nothing`, a function for `Just`. `maybe 0 (+1) (Just 5) == 6`, `maybe 0 (+1) Nothing == 0`."
+ },
+ {
+  "id": "error",
+  "name": "error",
+  "sig": "HasCallStack => [Char] -> a",
+  "desc": "Crash with a message and call stack; fits any type.",
+  "ex": "error \"bad\"",
+  "prio": "core",
+  "kind": "function",
+  "explain": "stops the program with a message and a call stack. Its result type is any `a`, so it fits anywhere."
+ },
+ {
+  "id": "errorWithoutStackTrace",
+  "name": "errorWithoutStackTrace",
+  "sig": "[Char] -> a",
+  "desc": "Crash with a message, no call stack.",
+  "ex": "",
+  "prio": "rare",
+  "kind": "function",
+  "explain": "the same without the call stack."
+ },
+ {
+  "id": "undefined",
+  "name": "undefined",
+  "sig": "HasCallStack => a",
+  "desc": "Placeholder that crashes when evaluated.",
+  "ex": "",
+  "prio": "core",
+  "kind": "function",
+  "explain": "a placeholder that crashes when evaluated. Every function in your lab skeletons started as `= undefined`."
+ },
+ {
+  "id": "even",
+  "name": "even",
+  "sig": "Integral a => a -> Bool",
+  "desc": "Is it even?",
+  "ex": "even 4 == True",
+  "prio": "core",
+  "kind": "function",
+  "explain": "`even 4 == True`."
+ },
+ {
+  "id": "odd",
+  "name": "odd",
+  "sig": "Integral a => a -> Bool",
+  "desc": "Is it odd?",
+  "ex": "odd 3 == True",
+  "prio": "core",
+  "kind": "function",
+  "explain": "`odd 3 == True`."
+ },
+ {
+  "id": "flip",
+  "name": "flip",
+  "sig": "(a -> b -> c) -> b -> a -> c",
+  "desc": "Swap the first two arguments.",
+  "ex": "flip (-) 1 10 == 9",
+  "prio": "core",
+  "kind": "function",
+  "explain": "swaps the first two arguments. `flip (-) 1 10 == 9`."
+ },
+ {
+  "id": "fromIntegral",
+  "name": "fromIntegral",
+  "sig": "(Integral a, Num b) => a -> b",
+  "desc": "Any whole-number type to any number type.",
+  "ex": "fromIntegral (length xs) / 2",
+  "prio": "core",
+  "kind": "function",
+  "explain": "converts any whole-number type to any number type. The usual fix for `length xs / 2`: write `fromIntegral (length xs) / 2`."
+ },
+ {
+  "id": "realToFrac",
+  "name": "realToFrac",
+  "sig": "(Real a, Fractional b) => a -> b",
+  "desc": "Convert between real types, e.g. Float to Double.",
+  "ex": "realToFrac (1.5 :: Float) :: Double",
+  "prio": "useful",
+  "kind": "function",
+  "explain": "converts between real number types, for example `Float` to `Double` or `Int` to `Double`."
+ },
+ {
+  "id": "fst",
+  "name": "fst",
+  "sig": "(a, b) -> a",
+  "desc": "First of a pair.",
+  "ex": "fst (1,'x') == 1",
+  "prio": "core",
+  "kind": "function",
+  "explain": "first component of a pair. `fst (1, 'x') == 1`."
+ },
+ {
+  "id": "snd",
+  "name": "snd",
+  "sig": "(a, b) -> b",
+  "desc": "Second of a pair.",
+  "ex": "snd (1,'x') == 'x'",
+  "prio": "core",
+  "kind": "function",
+  "explain": "second component of a pair. `snd (1, 'x') == 'x'`."
+ },
+ {
+  "id": "gcd",
+  "name": "gcd",
+  "sig": "Integral a => a -> a -> a",
+  "desc": "Greatest common divisor, non-negative.",
+  "ex": "gcd 12 18 == 6",
+  "prio": "useful",
+  "kind": "function",
+  "explain": "greatest common divisor, always non-negative. `gcd 12 18 == 6`; `gcd 0 0 == 0`."
+ },
+ {
+  "id": "lcm",
+  "name": "lcm",
+  "sig": "Integral a => a -> a -> a",
+  "desc": "Least common multiple.",
+  "ex": "lcm 4 6 == 12",
+  "prio": "useful",
+  "kind": "function",
+  "explain": "least common multiple. `lcm 4 6 == 12`."
+ },
+ {
+  "id": "getChar",
+  "name": "getChar",
+  "sig": "IO Char",
+  "desc": "Read one character from stdin.",
+  "ex": "",
+  "prio": "useful",
+  "kind": "function",
+  "explain": "reads one character from standard input."
+ },
+ {
+  "id": "getLine",
+  "name": "getLine",
+  "sig": "IO String",
+  "desc": "Read one line, newline removed.",
+  "ex": "name <- getLine",
+  "prio": "core",
+  "kind": "function",
+  "explain": "reads one line from standard input, without the newline. Used in your Tic Tac Toe `takeTurn`."
+ },
+ {
+  "id": "getContents",
+  "name": "getContents",
+  "sig": "IO String",
+  "desc": "Read all of stdin, lazily.",
+  "ex": "",
+  "prio": "useful",
+  "kind": "function",
+  "explain": "reads all of standard input, lazily (as it is needed)."
+ },
+ {
+  "id": "interact",
+  "name": "interact",
+  "sig": "(String -> String) -> IO ()",
+  "desc": "Pass all stdin through a function and print the result.",
+  "ex": "",
+  "prio": "useful",
+  "kind": "function",
+  "explain": "passes all of standard input through a function and prints the result. `interact (map toUpper)` (with `toUpper` from `Data.Char`)."
+ },
+ {
+  "id": "putChar",
+  "name": "putChar",
+  "sig": "Char -> IO ()",
+  "desc": "Print one character.",
+  "ex": "",
+  "prio": "useful",
+  "kind": "function",
+  "explain": "prints one character."
+ },
+ {
+  "id": "putStr",
+  "name": "putStr",
+  "sig": "String -> IO ()",
+  "desc": "Print without a newline.",
+  "ex": "putStr \"Enter: \"",
+  "prio": "core",
+  "kind": "function",
+  "explain": "prints a string **without** a newline."
+ },
+ {
+  "id": "putStrLn",
+  "name": "putStrLn",
+  "sig": "String -> IO ()",
+  "desc": "Print followed by a newline.",
+  "ex": "putStrLn \"hi\"",
+  "prio": "core",
+  "kind": "function",
+  "explain": "prints a string followed by a newline."
+ },
+ {
+  "id": "print",
+  "name": "print",
+  "sig": "Show a => a -> IO ()",
+  "desc": "putStrLn . show; print \"hi\" shows the quotes.",
+  "ex": "print (Just 3)",
+  "prio": "core",
+  "kind": "function",
+  "explain": "`putStrLn . show`. So `print \"hi\"` prints `\"hi\"` **with** the quotes."
+ },
+ {
+  "id": "readFile",
+  "name": "readFile",
+  "sig": "FilePath -> IO String",
+  "desc": "Read a whole file, lazily.",
+  "ex": "",
+  "prio": "useful",
+  "kind": "function",
+  "explain": "reads a whole file, lazily."
+ },
+ {
+  "id": "writeFile",
+  "name": "writeFile",
+  "sig": "FilePath -> String -> IO ()",
+  "desc": "Write a file, replacing its contents.",
+  "ex": "",
+  "prio": "useful",
+  "kind": "function",
+  "explain": "writes a file, replacing what was there."
+ },
+ {
+  "id": "ioError",
+  "name": "ioError",
+  "sig": "IOError -> IO a",
+  "desc": "Throw an IOError in IO.",
+  "ex": "ioError (userError \"boom\")",
+  "prio": "rare",
+  "kind": "function",
+  "explain": "throws an `IOError` inside `IO`. `ioError (userError \"boom\")`."
+ },
+ {
+  "id": "userError",
+  "name": "userError",
+  "sig": "String -> IOError",
+  "desc": "Build an IOError from a message.",
+  "ex": "",
+  "prio": "rare",
+  "kind": "function",
+  "explain": "builds an `IOError` from a message, to be thrown with `ioError`."
+ },
+ {
+  "id": "head",
+  "name": "head",
+  "sig": "HasCallStack => [a] -> a",
+  "desc": "First element; crashes on [].",
+  "ex": "head [1,2] == 1",
+  "prio": "core",
+  "kind": "function",
+  "explain": "first element. Crashes on `[]`. Recent GHCs warn about it for that reason."
+ },
+ {
+  "id": "tail",
+  "name": "tail",
+  "sig": "HasCallStack => [a] -> [a]",
+  "desc": "All but the first; crashes on [].",
+  "ex": "tail [1,2,3] == [2,3]",
+  "prio": "core",
+  "kind": "function",
+  "explain": "everything except the first element. Crashes on `[]`."
+ },
+ {
+  "id": "init",
+  "name": "init",
+  "sig": "HasCallStack => [a] -> [a]",
+  "desc": "All but the last; crashes on [].",
+  "ex": "init [1,2,3] == [1,2]",
+  "prio": "core",
+  "kind": "function",
+  "explain": "everything except the last element. `init [1,2,3] == [1,2]`. Crashes on `[]`."
+ },
+ {
+  "id": "last",
+  "name": "last",
+  "sig": "HasCallStack => [a] -> a",
+  "desc": "Last element; crashes on [].",
+  "ex": "last [1,2,3] == 3",
+  "prio": "core",
+  "kind": "function",
+  "explain": "last element. Crashes on `[]`."
+ },
+ {
+  "id": "id",
+  "name": "id",
+  "sig": "a -> a",
+  "desc": "Return the argument unchanged.",
+  "ex": "id 5 == 5",
+  "prio": "core",
+  "kind": "function",
+  "explain": "returns its argument unchanged. `id 5 == 5`."
+ },
+ {
+  "id": "iterate",
+  "name": "iterate",
+  "sig": "(a -> a) -> a -> [a]",
+  "desc": "Infinite [x, f x, f (f x), ...].",
+  "ex": "take 4 (iterate (*2) 1) == [1,2,4,8]",
+  "prio": "core",
+  "kind": "function",
+  "explain": "the infinite list `[x, f x, f (f x), ...]`. `take 4 (iterate (*2) 1) == [1,2,4,8]`. Used in your Maclaurin series to get repeated derivatives."
+ },
+ {
+  "id": "repeat",
+  "name": "repeat",
+  "sig": "a -> [a]",
+  "desc": "Infinite list of one value.",
+  "ex": "take 3 (repeat 'x') == \"xxx\"",
+  "prio": "core",
+  "kind": "function",
+  "explain": "an infinite list of the same value. `take 3 (repeat 'x') == \"xxx\"`."
+ },
+ {
+  "id": "replicate",
+  "name": "replicate",
+  "sig": "Int -> a -> [a]",
+  "desc": "n copies.",
+  "ex": "replicate 3 0 == [0,0,0]",
+  "prio": "core",
+  "kind": "function",
+  "explain": "`n` copies. `replicate 3 0 == [0,0,0]`. Your `emptyBoard` uses it."
+ },
+ {
+  "id": "until",
+  "name": "until",
+  "sig": "(a -> Bool) -> (a -> a) -> a -> a",
+  "desc": "Apply f until the test passes.",
+  "ex": "until (> 100) (*2) 1 == 128",
+  "prio": "useful",
+  "kind": "function",
+  "explain": "keeps applying a function until the test passes. `until (> 100) (*2) 1 == 128`."
+ },
+ {
+  "id": "lex",
+  "name": "lex",
+  "sig": "ReadS String",
+  "desc": "Read one Haskell token.",
+  "ex": "lex \"  foo bar\" == [(\"foo\",\" bar\")]",
+  "prio": "rare",
+  "kind": "function",
+  "explain": "reads one Haskell token, skipping leading spaces. `lex \"  foo bar\" == [(\"foo\", \" bar\")]`."
+ },
+ {
+  "id": "lines",
+  "name": "lines",
+  "sig": "String -> [String]",
+  "desc": "Split on newlines; no empty last line.",
+  "ex": "lines \"a\\nb\\n\" == [\"a\",\"b\"]",
+  "prio": "core",
+  "kind": "function",
+  "explain": "splits on newline characters. `lines \"a\\nb\\n\" == [\"a\",\"b\"]`; a trailing newline does not produce an empty last line."
+ },
+ {
+  "id": "unlines",
+  "name": "unlines",
+  "sig": "[String] -> String",
+  "desc": "Join, newline after EVERY line.",
+  "ex": "unlines [\"a\",\"b\"] == \"a\\nb\\n\"",
+  "prio": "core",
+  "kind": "function",
+  "explain": "joins lines, adding a newline after **every** line, including the last. `unlines [\"a\",\"b\"] == \"a\\nb\\n\"`."
+ },
+ {
+  "id": "words",
+  "name": "words",
+  "sig": "String -> [String]",
+  "desc": "Split on any whitespace, drop empties.",
+  "ex": "words \"  a  b\\n\" == [\"a\",\"b\"]",
+  "prio": "core",
+  "kind": "function",
+  "explain": "splits on any whitespace and drops empty pieces. `words \"  a  b\\n\" == [\"a\",\"b\"]`. Your `parsePosition` uses it."
+ },
+ {
+  "id": "unwords",
+  "name": "unwords",
+  "sig": "[String] -> String",
+  "desc": "Join with single spaces.",
+  "ex": "unwords [\"a\",\"b\"] == \"a b\"",
+  "prio": "core",
+  "kind": "function",
+  "explain": "joins with single spaces. `unwords [\"a\",\"b\"] == \"a b\"`."
+ },
+ {
+  "id": "lookup",
+  "name": "lookup",
+  "sig": "Eq a => a -> [(a, b)] -> Maybe b",
+  "desc": "Find a key in a list of pairs.",
+  "ex": "lookup 2 [(1,\"a\"),(2,\"b\")] == Just \"b\"",
+  "prio": "core",
+  "kind": "function",
+  "explain": "finds a key in a list of pairs. `lookup 2 [(1,\"a\"),(2,\"b\")] == Just \"b\"`."
+ },
+ {
+  "id": "map",
+  "name": "map",
+  "sig": "(a -> b) -> [a] -> [b]",
+  "desc": "Apply to every element.",
+  "ex": "map (*2) [1,2,3] == [2,4,6]",
+  "prio": "core",
+  "kind": "function",
+  "explain": "applies a function to every element. `map (*2) [1,2,3] == [2,4,6]`."
+ },
+ {
+  "id": "mapM_",
+  "name": "mapM_",
+  "sig": "(Foldable t, Monad m) => (a -> m b) -> t a -> m ()",
+  "desc": "Run an action per element, discard results.",
+  "ex": "mapM_ print [1,2]",
+  "prio": "core",
+  "kind": "function",
+  "explain": "runs an action for every element and throws the results away. `mapM_ print [1,2]`. Your `prettyPrint` uses it."
+ },
+ {
+  "id": "sequence_",
+  "name": "sequence_",
+  "sig": "(Foldable t, Monad m) => t (m a) -> m ()",
+  "desc": "Run every action, discard results.",
+  "ex": "sequence_ [putStr \"a\", putStr \"b\"]",
+  "prio": "useful",
+  "kind": "function",
+  "explain": "runs every action in order and discards the results. `sequence_ [putStr \"a\", putStr \"b\"]`."
+ },
+ {
+  "id": "not",
+  "name": "not",
+  "sig": "Bool -> Bool",
+  "desc": "Negation.",
+  "ex": "not True == False",
+  "prio": "core",
+  "kind": "function",
+  "explain": "logical negation."
+ },
+ {
+  "id": "notElem",
+  "name": "notElem",
+  "sig": "(Foldable t, Eq a) => a -> t a -> Bool",
+  "desc": "Not a member.",
+  "ex": "notElem 4 [1,2,3] == True",
+  "prio": "useful",
+  "kind": "function",
+  "explain": "the opposite of `elem`. `notElem 4 [1,2,3] == True`."
+ },
+ {
+  "id": "otherwise",
+  "name": "otherwise",
+  "sig": "Bool",
+  "desc": "Literally True; the final guard.",
+  "ex": "| otherwise = ...",
+  "prio": "core",
+  "kind": "function",
+  "explain": "literally `True`. It exists so the last guard reads nicely: `| otherwise = ...`."
+ },
+ {
+  "id": "read",
+  "name": "read",
+  "sig": "Read a => String -> a",
+  "desc": "Parse; crashes on failure (prefer readMaybe from Text.Read).",
+  "ex": "read \"42\" :: Int",
+  "prio": "core",
+  "kind": "function",
+  "explain": "parses a string. `read \"42\" :: Int`. Crashes if parsing fails, which is why the lab used `readMaybe` from `Text.Read` instead."
+ },
+ {
+  "id": "reads",
+  "name": "reads",
+  "sig": "Read a => ReadS a",
+  "desc": "Parse and return the leftover; [] on failure.",
+  "ex": "(reads \"12abc\" :: [(Int,String)]) == [(12,\"abc\")]",
+  "prio": "useful",
+  "kind": "function",
+  "explain": "a parser that returns the leftover input too. `(reads \"12abc\" :: [(Int, String)]) == [(12, \"abc\")]`; gives `[]` on failure."
+ },
+ {
+  "id": "readIO",
+  "name": "readIO",
+  "sig": "Read a => String -> IO a",
+  "desc": "Parse; failure is an IO exception.",
+  "ex": "",
+  "prio": "rare",
+  "kind": "function",
+  "explain": "like `read`, but a failed parse becomes an `IO` exception instead of a crash inside pure code."
+ },
+ {
+  "id": "readLn",
+  "name": "readLn",
+  "sig": "Read a => IO a",
+  "desc": "Read a line and parse it.",
+  "ex": "n <- readLn :: IO Int",
+  "prio": "useful",
+  "kind": "function",
+  "explain": "reads a line and parses it. `n <- readLn :: IO Int`."
+ },
+ {
+  "id": "readParen",
+  "name": "readParen",
+  "sig": "Bool -> ReadS a -> ReadS a",
+  "desc": "True: parentheses required. False: optional.",
+  "ex": "",
+  "prio": "rare",
+  "kind": "function",
+  "explain": "wraps a parser to handle parentheses. With `True` parentheses are required; with `False` they are optional."
+ },
+ {
+  "id": "reverse",
+  "name": "reverse",
+  "sig": "[a] -> [a]",
+  "desc": "Reverse a list.",
+  "ex": "reverse [1,2,3] == [3,2,1]",
+  "prio": "core",
+  "kind": "function",
+  "explain": "reverses a list. `reverse [1,2,3] == [3,2,1]`."
+ },
+ {
+  "id": "scanl",
+  "name": "scanl",
+  "sig": "(b -> a -> b) -> b -> [a] -> [b]",
+  "desc": "foldl keeping every intermediate result.",
+  "ex": "scanl (+) 0 [1,2,3] == [0,1,3,6]",
+  "prio": "core",
+  "kind": "function",
+  "explain": "like `foldl`, but keeps every intermediate result. `scanl (+) 0 [1,2,3] == [0,1,3,6]`. The calculus spec suggested it for factorials: `scanl (*) 1 [1..] == [1,1,2,6,24,...]`."
+ },
+ {
+  "id": "scanl1",
+  "name": "scanl1",
+  "sig": "(a -> a -> a) -> [a] -> [a]",
+  "desc": "scanl seeded with the first element.",
+  "ex": "scanl1 (+) [1,2,3] == [1,3,6]",
+  "prio": "useful",
+  "kind": "function",
+  "explain": "`scanl` using the first element as the start. `scanl1 (+) [1,2,3] == [1,3,6]`."
+ },
+ {
+  "id": "scanr",
+  "name": "scanr",
+  "sig": "(a -> b -> b) -> b -> [a] -> [b]",
+  "desc": "foldr keeping every intermediate result.",
+  "ex": "scanr (+) 0 [1,2,3] == [6,5,3,0]",
+  "prio": "useful",
+  "kind": "function",
+  "explain": "like `foldr`, keeping every intermediate result. `scanr (+) 0 [1,2,3] == [6,5,3,0]`."
+ },
+ {
+  "id": "scanr1",
+  "name": "scanr1",
+  "sig": "(a -> a -> a) -> [a] -> [a]",
+  "desc": "scanr seeded with the last element.",
+  "ex": "scanr1 (+) [1,2,3] == [6,5,3]",
+  "prio": "useful",
+  "kind": "function",
+  "explain": "`scanr` using the last element as the start. `scanr1 (+) [1,2,3] == [6,5,3]`."
+ },
+ {
+  "id": "seq",
+  "name": "seq",
+  "sig": "a -> b -> b",
+  "desc": "Evaluate the first to WHNF, return the second. infixr 0.",
+  "ex": "seq (undefined, undefined) 1 == 1",
+  "prio": "useful",
+  "kind": "function",
+  "explain": "evaluates the first argument to WHNF, then returns the second. `seq undefined 1` crashes, but `seq (undefined, undefined) 1 == 1` because a pair is already in WHNF. `infixr 0`."
+ },
+ {
+  "id": "showChar",
+  "name": "showChar",
+  "sig": "Char -> ShowS",
+  "desc": "Prepend a character.",
+  "ex": "showChar 'x' \"yz\" == \"xyz\"",
+  "prio": "rare",
+  "kind": "function",
+  "explain": "puts a character in front. `showChar 'x' \"yz\" == \"xyz\"`."
+ },
+ {
+  "id": "showString",
+  "name": "showString",
+  "sig": "String -> ShowS",
+  "desc": "Prepend a string.",
+  "ex": "showString \"ab\" \"cd\" == \"abcd\"",
+  "prio": "rare",
+  "kind": "function",
+  "explain": "puts a string in front. `showString \"ab\" \"cd\" == \"abcd\"`."
+ },
+ {
+  "id": "showParen",
+  "name": "showParen",
+  "sig": "Bool -> ShowS -> ShowS",
+  "desc": "Wrap in parentheses if True.",
+  "ex": "showParen True (showString \"a\") \"\" == \"(a)\"",
+  "prio": "rare",
+  "kind": "function",
+  "explain": "wraps the output in parentheses when the flag is True. `showParen True (showString \"a\") \"\" == \"(a)\"`."
+ },
+ {
+  "id": "shows",
+  "name": "shows",
+  "sig": "Show a => a -> ShowS",
+  "desc": "Show a value in front of more text.",
+  "ex": "shows 12 \"abc\" == \"12abc\"",
+  "prio": "rare",
+  "kind": "function",
+  "explain": "shows a value in front of more text. `shows 12 \"abc\" == \"12abc\"`."
+ },
+ {
+  "id": "splitAt",
+  "name": "splitAt",
+  "sig": "Int -> [a] -> ([a], [a])",
+  "desc": "Split after n elements.",
+  "ex": "splitAt 2 [1,2,3] == ([1,2],[3])",
+  "prio": "core",
+  "kind": "function",
+  "explain": "splits after `n` elements. `splitAt 2 [1,2,3] == ([1,2],[3])`. `Board.rows` in your Tic Tac Toe uses it."
+ },
+ {
+  "id": "subtract",
+  "name": "subtract",
+  "sig": "Num a => a -> a -> a",
+  "desc": "subtract x y == y - x; use instead of the section (-1).",
+  "ex": "map (subtract 1) [5,6] == [4,5]",
+  "prio": "useful",
+  "kind": "function",
+  "explain": "`subtract x y == y - x`. Needed because `(-1)` is the number minus one, not a section: write `map (subtract 1) [5,6] == [4,5]`."
+ },
+ {
+  "id": "unzip",
+  "name": "unzip",
+  "sig": "[(a, b)] -> ([a], [b])",
+  "desc": "Split a list of pairs.",
+  "ex": "unzip [(1,'a'),(2,'b')] == ([1,2],\"ab\")",
+  "prio": "core",
+  "kind": "function",
+  "explain": "splits a list of pairs. `unzip [(1,'a'),(2,'b')] == ([1,2],\"ab\")`."
+ },
+ {
+  "id": "unzip3",
+  "name": "unzip3",
+  "sig": "[(a, b, c)] -> ([a], [b], [c])",
+  "desc": "Split a list of triples.",
+  "ex": "",
+  "prio": "useful",
+  "kind": "function",
+  "explain": "the same for triples."
+ },
+ {
+  "id": "zip",
+  "name": "zip",
+  "sig": "[a] -> [b] -> [(a, b)]",
+  "desc": "Pair up, stopping at the shorter.",
+  "ex": "zip [1,2,3] \"ab\" == [(1,'a'),(2,'b')]",
+  "prio": "core",
+  "kind": "function",
+  "explain": "pairs up elements, stopping at the shorter list. `zip [1,2,3] \"ab\" == [(1,'a'),(2,'b')]`."
+ },
+ {
+  "id": "zip3",
+  "name": "zip3",
+  "sig": "[a] -> [b] -> [c] -> [(a, b, c)]",
+  "desc": "Zip three lists.",
+  "ex": "",
+  "prio": "useful",
+  "kind": "function",
+  "explain": "the same for three lists."
+ },
+ {
+  "id": "zipWith",
+  "name": "zipWith",
+  "sig": "(a -> b -> c) -> [a] -> [b] -> [c]",
+  "desc": "Combine pairwise with a function.",
+  "ex": "zipWith (+) [1,2] [10,20] == [11,22]",
+  "prio": "core",
+  "kind": "function",
+  "explain": "combines elements pairwise with a function. `zipWith (+) [1,2] [10,20] == [11,22]`."
+ },
+ {
+  "id": "zipWith3",
+  "name": "zipWith3",
+  "sig": "(a -> b -> c -> d) -> [a] -> [b] -> [c] -> [d]",
+  "desc": "zipWith for three lists.",
+  "ex": "zipWith3 (\\a b c -> a+b+c) [1] [2] [3] == [6]",
+  "prio": "useful",
+  "kind": "function",
+  "explain": "the same for three lists."
+ }
+]
