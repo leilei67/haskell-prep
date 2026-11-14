@@ -1,0 +1,43 @@
+<!doctype html>
+<meta charset="utf-8" />
+<title>Haskell runtime</title>
+<script src="https://cdn.jsdelivr.net/npm/@live-codes/browser-haskell@0.1.2/dist/browser-haskell.iife.js"></script>
+<script>
+  const CDN = "https://cdn.jsdelivr.net/npm/@live-codes/browser-haskell@0.1.2/dist/";
+  let hs = null;
+  const boot = BrowserHaskell.createHaskell({ baseUrl: CDN, timeout: 20_000 })
+    .then((inst) => {
+      hs = inst;
+      parent.postMessage({ type: "ready" }, "*");
+    })
+    .catch((e) => {
+      parent.postMessage({ type: "boot-error", error: String(e) }, "*");
+    });
+
+  window.addEventListener("message", async (ev) => {
+    const data = ev.data || {};
+    if (data.id == null || data.code == null) return;
+    try {
+      await boot;
+      if (!hs) throw new Error("Haskell runtime failed to start");
+      const r = await hs.run({ code: data.code, timeout: data.timeout ?? 20_000 });
+      if (r.exitCode === 124) {
+        hs.dispose();
+        hs = await BrowserHaskell.createHaskell({ baseUrl: CDN, timeout: 20_000 });
+      }
+      parent.postMessage(
+        {
+          type: "done",
+          id: data.id,
+          stdout: r.stdout ?? "",
+          stderr: r.stderr ?? "",
+          error: r.error,
+          exitCode: r.exitCode,
+        },
+        "*",
+      );
+    } catch (e) {
+      parent.postMessage({ type: "done", id: data.id, stdout: "", stderr: "", error: String(e), exitCode: 1 }, "*");
+    }
+  });
+</script>

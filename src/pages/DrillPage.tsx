@@ -35,14 +35,8 @@ function buildQueue(mode: "set" | "review", setId?: string): { title: string; it
   if (mode === "set") {
     const set = setId ? drillSetById.get(setId) : undefined;
     if (!set) return null;
-    const s = getState();
     const items = set.drills.map((drill, i) => ({ key: drillKey(set.id, i), drill, retry: false }));
-    const fresh = items.filter((it) => !s.mem[it.key]);
-    const seen = items
-      .filter((it) => s.mem[it.key])
-      .sort((a, b) => retrievability(s.mem[a.key], Date.now()) - retrievability(s.mem[b.key], Date.now()));
-    const cap = set.lesson ? 12 : set.drills.length;
-    return { title: set.title, items: [...fresh, ...seen].slice(0, cap) };
+    return { title: set.title, items };
   }
   const due = dueDrillKeys();
   let keys = due.slice(0, 15);

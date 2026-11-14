@@ -35,7 +35,7 @@ export function PlaygroundPage({ ghcUp }: { ghcUp: boolean }) {
     setBusy(true);
     const r = await runExprs([], defs, "playground");
     setBusy(false);
-    if (!r) setLoadMsg({ ok: false, text: "The GHCi server isn't running." });
+    if (!r) setLoadMsg({ ok: false, text: "Haskell isn't ready yet. Wait a moment and try again." });
     else setLoadMsg(r.load ? { ok: false, text: r.load } : { ok: true, text: "Loaded. Your definitions are in scope." });
   };
 
@@ -50,7 +50,7 @@ export function PlaygroundPage({ ghcUp }: { ghcUp: boolean }) {
     const r = await runExprs([...bindings, cmd], defs, "playground");
     setBusy(false);
     if (!r) {
-      setEntries((e) => [...e, { input: cmd, output: "The GHCi server isn't running. Start it with npm run dev.", error: true }]);
+      setEntries((e) => [...e, { input: cmd, output: "Haskell isn't ready yet. Wait a moment and try again.", error: true }]);
       return;
     }
     const out = r.outputs[r.outputs.length - 1] ?? "";
@@ -67,10 +67,10 @@ export function PlaygroundPage({ ghcUp }: { ghcUp: boolean }) {
     <div className="page playground">
       <h1 className="page-title">Playground</h1>
       <p className="page-lede">
-        A real GHCi. Put definitions on the left; evaluate expressions, <code className="code">:t</code>,{" "}
-        <code className="code">:i</code> and <code className="code">let</code> bindings on the right.
+        Put definitions on the left; evaluate expressions and <code className="code">let</code> bindings on the right.
+        <code className="code">:t</code> and <code className="code">:i</code> need local GHCi (<code className="code">npm run dev</code>).
       </p>
-      {!ghcUp && <p className="banner">The playground needs the GHCi server. Run <code className="code">npm run dev</code>.</p>}
+      {!ghcUp && <p className="banner">Haskell is still starting in this tab.</p>}
       <div className="playground-grid">
         <section className="pg-editor">
           <div className="pg-bar">

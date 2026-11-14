@@ -147,7 +147,7 @@ export function ExamPage({ id }: { id: string }) {
     const r = await runChallengeTests(code, exam.setup, allTests);
     setBusy(false);
     if (!r) {
-      setResult({ compileError: "The GHC server isn't running. Start the app with npm run dev.", results: [], timedOut: false });
+      setResult({ compileError: "Haskell isn't ready yet. Wait a moment and try again.", results: [], timedOut: false });
       return;
     }
     setResult(r);

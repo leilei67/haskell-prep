@@ -70,7 +70,7 @@ export function RunExample({ ex }: { ex: string }) {
     setBusy(true);
     const r = await runExprs([ex]);
     setBusy(false);
-    setOut(r ? r.outputs[0] : "The GHCi server isn't running, so this can't be evaluated.");
+    setOut(r ? r.outputs[0] : "Haskell isn't ready yet.");
   };
   return (
     <div className="run-example">

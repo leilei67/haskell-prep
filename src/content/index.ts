@@ -4,6 +4,7 @@ import { drills as foundationDrills } from "./drills-foundations";
 import * as skillsA from "./skills-a";
 import * as skillsB from "./skills-b";
 import * as skillsC from "./skills-c";
+import * as skillsInterim from "./skills-interim";
 import { mixed as mixedSets } from "./mixed";
 
 export interface Track {
@@ -24,7 +25,7 @@ export const tracks: Track[] = [
     id: "skills",
     title: "Exam skills",
     blurb: "Every technique the past exams use, taught step by step.",
-    lessons: [...skillsA.lessons, ...skillsB.lessons, ...skillsC.lessons],
+    lessons: [...skillsA.lessons, ...skillsB.lessons, ...skillsC.lessons, ...skillsInterim.lessons],
   },
 ];
 
@@ -51,6 +52,7 @@ export const drillSets: DrillSet[] = [
   ...skillsA.drills,
   ...skillsB.drills,
   ...skillsC.drills,
+  ...skillsInterim.drills,
   ...books.flatMap((b) => b.sets),
   ...mixed,
 ];

@@ -19,6 +19,8 @@ const COMMON_IMPORTS = [
 
 export const CHECK_IMPORTS = [
   ...COMMON_IMPORTS,
+  "import qualified Data.Map as Map",
+  "import qualified Data.Set as Set",
   "import Data.Foldable (fold, foldMap', foldr', toList)",
   "import Numeric (log1p, expm1, log1pexp, log1mexp)",
   "import Data.Semigroup (sconcat, stimes)",

@@ -37,5 +37,5 @@ if (process.env.NODE_ENV === "production") {
 
 const port = process.env.NODE_ENV === "production" ? 5173 : 5174;
 app.listen(port, "127.0.0.1", () => {
-  console.log(`Prelude Path API on http://127.0.0.1:${port}`);
+  console.log(`Haskell Prep API on http://127.0.0.1:${port}`);
 });

@@ -17,7 +17,7 @@ export function SettingsPage() {
     const blob = new Blob([exportProgress()], { type: "application/json" });
     const a = document.createElement("a");
     a.href = URL.createObjectURL(blob);
-    a.download = `prelude-path-progress-${new Date().toISOString().slice(0, 10)}.json`;
+    a.download = `haskell-prep-progress-${new Date().toISOString().slice(0, 10)}.json`;
     a.click();
     URL.revokeObjectURL(a.href);
   };
@@ -27,7 +27,7 @@ export function SettingsPage() {
       importProgress(await file.text());
       setMsg("Progress imported.");
     } catch {
-      setMsg("That file isn't a Prelude Path progress file.");
+      setMsg("That file isn't a Haskell Prep progress file.");
     }
   };
 

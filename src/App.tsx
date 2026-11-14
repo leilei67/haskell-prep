@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { health } from "./lib/api";
+import { health, resetEngine } from "./lib/api";
 import { go, useRoute } from "./lib/router";
 import { currentStreak, dayKey, useAppState } from "./lib/store";
 import { PathPage } from "./pages/PathPage";
@@ -52,7 +52,7 @@ export function App() {
     <div className={`shell ${wide ? "shell-wide" : ""}`}>
       <aside className="sidebar">
         <a className="brand" href="#/">
-          <span className="brand-name">Prelude Path</span>
+          <span className="brand-name">Haskell Prep</span>
           <span className="brand-sig">:: IO FullMarks</span>
         </a>
         <nav className="nav">
@@ -75,10 +75,23 @@ export function App() {
         </div>
       </aside>
       <main className="main">
+        {ghc === undefined && (
+          <div className="banner" role="status">
+            Starting Haskell in this tab…
+          </div>
+        )}
         {ghc === null && (
           <div className="banner" role="status">
-            The GHC server isn't reachable, so code can't be checked. Start the app with <code className="code">npm run dev</code>.
-            <button type="button" className="btn btn-quiet btn-small" onClick={() => health().then(setGhc)}>
+            Couldn't start the in-browser Haskell compiler. Retry, or run <code className="code">npm run dev</code> for full GHCi.
+            <button
+              type="button"
+              className="btn btn-quiet btn-small"
+              onClick={() => {
+                resetEngine();
+                setGhc(undefined);
+                health().then(setGhc);
+              }}
+            >
               Retry
             </button>
           </div>

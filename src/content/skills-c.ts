@@ -4201,6 +4201,7 @@ const examcraft: Lesson = {
         "Knowing Haskell gets you most of the marks. Exam technique gets you the rest. Here is what the January test looks like (2024 as the model):",
         "",
         "- Three hours, about 30 marks, split into Parts I, II and III.",
+        "- Newer papers expect **`Data.Map`**, **`Data.Set`**, and recursive **tree** types (see the **Data.Map and Data.Set** and **Recursive trees** lessons on the path).",
         "- A spec (the PDF) describes a problem and gives the data types. A template file gives you those types, some test data, and a stub for each function you must write.",
         "- You work in one file (2024: `Int.hs`). You must not edit the other given files; any changes are reverted.",
         "- Your functions are autotested: the tester calls them with exactly the given type and compares the result with the expected answer.",

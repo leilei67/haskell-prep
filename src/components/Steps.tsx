@@ -14,7 +14,7 @@ export function TestResults({ tests, result }: { tests: Test[]; result: Challeng
   if (result.compileError) {
     return (
       <>
-        <p className="step-wrong">GHC couldn't compile the code yet. The first lines of the message say where the problem is:</p>
+        <p className="step-wrong">Couldn't compile the code yet. The first lines of the message say where the problem is:</p>
         <pre className="load-msg err">{result.compileError}</pre>
       </>
     );
@@ -59,7 +59,7 @@ function TryStep({ step, onDone }: StepProps<"try">) {
     setBusy(true);
     const r = await runExprs([step.code]);
     setBusy(false);
-    setOut(r ? r.outputs[0] || "(no output)" : "The GHCi server isn't running. Start the app with npm run dev.");
+    setOut(r ? r.outputs[0] || "(no output)" : "Haskell isn't ready yet.");
     onDone(true);
   };
   return (
@@ -137,11 +137,11 @@ function PredictStep({ step, onDone }: StepProps<"predict">) {
   const check = async () => {
     if (!answer.trim() || busy) return;
     setBusy(true);
-    const r = await runExprs([`(${step.expr})`, `((${step.expr}) == (${answer.trim()}))`]);
+    const r = await runExprs([`(${step.expr})`]);
     setBusy(false);
     const shown = r?.outputs[0] ?? step.answer;
     setActual(shown);
-    const ok = r?.outputs[1].trim() === "True" || squash(answer) === squash(shown) || squash(answer) === squash(step.answer);
+    const ok = squash(answer) === squash(shown) || squash(answer) === squash(step.answer);
     if (ok) {
       setState("right");
       onDone(misses === 0);
@@ -237,7 +237,7 @@ function WriteStep({ step, onDone }: StepProps<"write">) {
     const r = await runChallengeTests(code, step.setup ?? "", step.tests);
     setBusy(false);
     if (!r) {
-      setMessage("The GHCi server isn't running. Start the app with `npm run dev`.");
+      setMessage("Haskell isn't ready yet. Wait a moment and try again.");
       return;
     }
     setResult(r);

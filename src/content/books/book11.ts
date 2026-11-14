@@ -177,11 +177,6 @@ evalCalc (Minus a b) = evalCalc a - evalCalc b
 evalCalc (Times a b) = evalCalc a * evalCalc b
 `;
 
-const givenLook = hs`
-look :: Eq a => a -> [(a, b)] -> b
-look k tbl = fromJust (lookup k tbl)
-`;
-
 const givenWriteCell = hs`
 writeCell :: Cell -> Int -> Memory -> Memory
 writeCell c n mem = (c, n) : [p | p <- mem, fst p /= c]
@@ -229,21 +224,6 @@ step Swap (x : y : ys) = y : x : ys
 step Drop (_ : xs) = xs
 step Neg (x : xs) = negate x : xs
 step _ stk = stk
-`;
-
-const givenEvalArith = hs`
-evalArith :: Env -> Arith -> Int
-evalArith _ (Lit n) = n
-evalArith env (Use v) = look v env
-evalArith env (Sum a b) = evalArith env a + evalArith env b
-evalArith env (Prod a b) = evalArith env a * evalArith env b
-`;
-
-const givenMix = hs`
-mix :: Mix -> Int -> Int -> Int
-mix Add = (+)
-mix Sub = (-)
-mix Mul = (*)
 `;
 
 // ---------------------------------------------------------------------------
@@ -1462,19 +1442,6 @@ data Stmt = Set String Atom | Speak Atom | When Atom [Stmt] | Loop String [Stmt]
   deriving (Eq, Show)
 -- When a ss: if a evaluates to something other than 0, run ss, otherwise skip.
 -- Loop x ss: while x is present and not 0, run ss. You may assume it always stops.
-`;
-
-const givenEvalF = hs`
-mix :: Mix -> Int -> Int -> Int
-mix Add = (+)
-mix Sub = (-)
-mix Mul = (*)
-
-evalF :: Env -> Formula -> Int
-evalF _ (Amt n) = n
-evalF env (Name v) = fromJust (lookup v env)
-evalF env (Join op a b) = mix op (evalF env a) (evalF env b)
-evalF env (Bind x e body) = evalF ((x, evalF env e) : env) body
 `;
 
 const givenApplyPatch = hs`
